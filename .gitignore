@@ -1,3 +1,5 @@
-datasets/*
-*/.idea/*
+*.idea/*
 */__pycache__/*
+*.vscode/*
+materials/*
+datasets/*
