@@ -2,26 +2,25 @@ import sys
 
 from sklearn.datasets import fetch_20newsgroups
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.linear_model import LogisticRegression, SGDClassifier
-from sklearn.svm import LinearSVC
-
 import matplotlib.pyplot as plt
 import pandas as pd
 import warnings
+
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.linear_model import LogisticRegression, SGDClassifier
+from sklearn.svm import LinearSVC
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import cross_val_score
-
 from sklearn.naive_bayes import MultinomialNB
-
-warnings.filterwarnings('ignore')
 
 # %matplotlib inline
 from topic_classification.classifiers_utils import train_multiple_classifiers
 from topic_classification.dataset_utils import load_20newsgroups
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import get_train_test_distribution_by_labels_names
+
+warnings.filterwarnings('ignore')
 
 # Fetch and preprocess data or load from disk
 # data_df = fetch_preprocess_and_save_20newsgroups()
@@ -71,3 +70,4 @@ classifier_name_list.append('SVM with Stochastic Gradient Descent')
 classifier_name_list.append('Random Forest')
 classifier_name_list.append('Gradient Boosting Machines')
 results = train_multiple_classifiers(classifier_list, classifier_name_list, training_data)
+
