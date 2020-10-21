@@ -1,7 +1,7 @@
 import nltk
 import spacy
 import unicodedata
-from contractions import CONTRACTION_MAP
+from text_preprocessing.contractions import CONTRACTION_MAP
 import re
 from nltk.corpus import wordnet
 import collections
@@ -105,8 +105,10 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
                      stopword_removal=True, stopwords=stopword_list):
     normalized_corpus = []
     # normalize each document in the corpus
+    doc_num = 1
     for doc in corpus:
-
+        print("Doc num:", doc_num)
+        doc_num += 1
         # strip HTML
         if html_stripping:
             doc = strip_html_tags(doc)
