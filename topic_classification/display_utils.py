@@ -2,6 +2,7 @@ from collections import Counter
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import util
 
 from topic_classification.constants import *
 
@@ -15,13 +16,14 @@ def get_train_test_distribution_by_labels_names(train_label_names, test_label_na
                          ascending=False))
 
 
-def plot_classifiers_scores_and_training_time_as_bars(classifier_name_list, scores):
+def create_bar_plot(classifier_name_list, scores, plot_title, y_label_name,
+                    color='blue'):
     x = np.arange(len(classifier_name_list))
     fig, ax = plt.subplots()
-    bars1 = ax.bar(x, scores, BAR_WIDTH)
+    bars = ax.bar(x, scores, BAR_WIDTH, color=color)
 
-    ax.set_ylabel('Scores')
-    ax.set_title('Classifier scores')
+    ax.set_ylabel(plot_title)
+    ax.set_title(y_label_name)
     ax.set_xticks(x)
     ax.set_xticklabels(classifier_name_list)
 
@@ -35,11 +37,12 @@ def plot_classifiers_scores_and_training_time_as_bars(classifier_name_list, scor
                         textcoords="offset points",
                         ha='center', va='bottom')
 
-    autolabel(bars1)
-    # autolabel(bars2)
+    autolabel(bars)
     # fig.tight_layout()
     plt.show()
-    fig.savefig(SAVE_PATH + 'classifier_scores_' + str(CLASSIFIER_ITERATION) + '.png')
+    fig.savefig(
+        SAVE_PATH + util.convert_name_to_filename(plot_title) + '_' + str(
+            CLASSIFIER_ITERATION) + '.png')
 
 
 def display_bar_plot(title, labels, scores, y_label):
