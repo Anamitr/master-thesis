@@ -1,9 +1,11 @@
 # Directories
 *.idea/*
-*/__pycache__/*
+*__pycache__*
 *.vscode/*
 materials/*
 datasets/*
 
 # Files
 *.csv
+*.pkl
+*.png

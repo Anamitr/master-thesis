@@ -11,12 +11,12 @@ TrainingData):
         print("Classifier list length and classifier name list length must be equal!")
         return
 
-    results = []
+    results_list = []
     for i in range(0, len(classifier_list)):
-        results.append(train_classifier_and_display_results(classifier_list[i],
+        results_list.append(train_classifier_and_display_results(classifier_list[i],
                                                             classifier_name_list[i],
                                                             training_data))
-    return results
+    return results_list
 
 
 def train_classifier_and_display_results(classifier, classifier_name: str, training_data:
@@ -27,7 +27,9 @@ TrainingData):
     end_time = time.time()
     print('CV Accuracy (5-fold):', results[0])
     print('Mean CV Accuracy:', results[1], 'Test Accuracy:', results[2])
-    print('Time elapsed:', round(end_time - start_time, 2), 'seconds\n')
+    time_elapsed = round(end_time - start_time, 2)
+    print('Time elapsed:', time_elapsed, 'seconds\n')
+    results.append(time_elapsed)
     return results
 
 
@@ -41,4 +43,4 @@ def train_classifier_with_count_vectorizer(classifier, training_data: TrainingDa
     mnb_bow_test_score = classifier.score(training_data.cv_test_features,
                                           training_data.test_label_names)
 
-    return mnb_bow_cv_scores, mnb_bow_cv_mean_score, mnb_bow_test_score
+    return [mnb_bow_cv_scores, mnb_bow_cv_mean_score, mnb_bow_test_score]
