@@ -15,21 +15,15 @@ def get_train_test_distribution_by_labels_names(train_label_names, test_label_na
                          ascending=False))
 
 
-def plot_classifiers_scores_and_training_time_as_bars(classifier_name_list, scores,
-                                                      times, score_label):
+def plot_classifiers_scores_and_training_time_as_bars(classifier_name_list, scores):
     x = np.arange(len(classifier_name_list))
     fig, ax = plt.subplots()
     bars1 = ax.bar(x, scores, BAR_WIDTH)
-
-    # max_time = max(times)
-    # relative_times = [elapsed_time / max_time for elapsed_time in times]
-    # bars2 = ax.bar(x + BAR_WIDTH / 2, relative_times, BAR_WIDTH, label='time in seconds')
 
     ax.set_ylabel('Scores')
     ax.set_title('Classifier scores')
     ax.set_xticks(x)
     ax.set_xticklabels(classifier_name_list)
-    ax.legend()
 
     def autolabel(rects):
         """Attach a text label above each bar in *rects*, displaying its height."""
@@ -45,7 +39,7 @@ def plot_classifiers_scores_and_training_time_as_bars(classifier_name_list, scor
     # autolabel(bars2)
     # fig.tight_layout()
     plt.show()
-    plt.savefig(SAVE_PATH + 'classifier_scores_' + CLASSIFIER_ITERATION + '.pkl')
+    fig.savefig(SAVE_PATH + 'classifier_scores_' + str(CLASSIFIER_ITERATION) + '.png')
 
 
 def display_bar_plot(title, labels, scores, y_label):

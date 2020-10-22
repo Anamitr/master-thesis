@@ -82,5 +82,4 @@ classifier_list = util.load_classifier_list(classifier_name_list, SAVE_PATH)
 # [2] test score, [3] times
 scores = [round(result[1], 2) for result in results]
 times = [round(result[3], 2) for result in results]
-# plot_classifiers_scores_and_training_time_as_bars(classifier_name_list, scores,
-#                                                   times, 'mean score')
+plot_classifiers_scores_and_training_time_as_bars(classifier_name_shortcut_list, scores)
