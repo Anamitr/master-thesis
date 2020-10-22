@@ -14,3 +14,6 @@ BAR_WIDTH = 0.35
 SAVE_PATH = '/home/konrad/Repositories/master-diploma/topic_classification/' \
             'trained_classifiers/' + EXPERIMENT_NAME + '/'
 RESULTS_PATH = SAVE_PATH + 'results_' + str(CLASSIFIER_ITERATION) + '.pkl'
+
+SCORE_DECIMAL_PLACES = 4
+TIME_DECIMAL_PLACES = 2

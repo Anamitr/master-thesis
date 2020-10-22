@@ -68,8 +68,8 @@ results = util.load_object(RESULTS_PATH)
 
 # results[0] = array of crossvalidation, [1] crossvalidation scores,
 # [2] test score, [3] times
-scores = [round(result[1], 2) for result in results]
-elapsed_times = [round(result[3], 2) for result in results]
-create_bar_plot(classifier_name_shortcut_list, scores, 'Scores', 'Classifier scores')
+scores = [round(result[1], SCORE_DECIMAL_PLACES) for result in results]
+elapsed_times = [round(result[3], TIME_DECIMAL_PLACES) for result in results]
+create_bar_plot(classifier_name_shortcut_list, scores, 'Classifier scores', 'Scores')
 create_bar_plot(classifier_name_shortcut_list, elapsed_times,
                 'Elapsed training times', 'Time in seconds', 'red')

@@ -22,8 +22,8 @@ def create_bar_plot(classifier_name_list, scores, plot_title, y_label_name,
     fig, ax = plt.subplots()
     bars = ax.bar(x, scores, BAR_WIDTH, color=color)
 
-    ax.set_ylabel(plot_title)
-    ax.set_title(y_label_name)
+    ax.set_ylabel(y_label_name)
+    ax.set_title(plot_title)
     ax.set_xticks(x)
     ax.set_xticklabels(classifier_name_list)
 
