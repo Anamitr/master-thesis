@@ -9,3 +9,5 @@ datasets/*
 *.csv
 *.pkl
 *.png
+*.json
+*.bp
