@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def document_vectorizer(corpus, model, num_features):
+def document_vectorize(corpus, model, num_features):
     vocabulary = set(model.wv.index2word)
 
     def average_word_vectors(words, model, vocabulary, num_features):

@@ -14,7 +14,7 @@ from topic_classification.experiment_config import \
     WORD2VEC_MODEL_SAVE_PATH
 from topic_classification.constants import *
 from topic_classification.dataset_utils import load_20newsgroups, \
-    fetch_preprocess_and_save_20newsgroups
+    fetch_preprocess_and_save_20newsgroups, load_preprocessed_news_category_dataset
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     create_bar_plot, create_2_bar_plot
@@ -31,16 +31,15 @@ logging.basicConfig(format="%(levelname)s - %(asctime)s: %(message)s",
 warnings.filterwarnings('ignore')
 
 # # Fetch and preprocess data or load from disk
-# data_df = fetch_preprocess_and_save_20newsgroups()
+# data_df = fetch_preprocess_and_save_news_category_dataset()
 
 # # Load dataset from disk
-data_df = load_20newsgroups()
+data_df = load_preprocessed_news_category_dataset()
 
-train_corpus, test_corpus, train_label_nums, test_label_nums, train_label_names, \
-test_label_names = train_test_split(np.array(data_df['Clean Article']),
-                                    np.array(data_df['Target Label']),
-                                    np.array(data_df['Target Name']),
-                                    test_size=0.33, random_state=42)
+train_corpus, test_corpus, train_label_names, test_label_names = train_test_split(
+    np.array(data_df['Clean Article']),
+    np.array(data_df['Target Name']),
+    test_size=0.33, random_state=42)
 # tokenize corpus
 tokenized_train = [tn.tokenizer.tokenize(text) for text in train_corpus]
 tokenized_test = [tn.tokenizer.tokenize(text) for text in test_corpus]
