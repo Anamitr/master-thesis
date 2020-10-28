@@ -11,7 +11,8 @@ from bs4 import BeautifulSoup
 
 tokenizer = ToktokTokenizer()
 stopword_list = nltk.corpus.stopwords.words('english')
-nlp = spacy.load('en_core_web_sm', parse=True, tag=True, entity=True)
+spacy_english_model = spacy.load('en', parse=True, tag=True,
+                                 entity=True)
 
 
 # nlp_vec = spacy.load('en_vectors_web_lg', parse=True, tag=True, entity=True)
@@ -39,8 +40,9 @@ def simple_porter_stemming(text):
 
 
 def lemmatize_text(text):
-    text = nlp(text)
-    text = ' '.join([word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
+    text = spacy_english_model(text)
+    text = ' '.join(
+        [word.lemma_ if word.lemma_ != '-PRON-' else word.text for word in text])
     return text
 
 
@@ -59,8 +61,9 @@ def remove_repeated_characters(tokens):
 
 
 def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
-    contractions_pattern = re.compile('({})'.format('|'.join(contraction_mapping.keys())),
-                                      flags=re.IGNORECASE | re.DOTALL)
+    contractions_pattern = re.compile(
+        '({})'.format('|'.join(contraction_mapping.keys())),
+        flags=re.IGNORECASE | re.DOTALL)
 
     def expand_match(contraction):
         match = contraction.group(0)
@@ -77,7 +80,8 @@ def expand_contractions(text, contraction_mapping=CONTRACTION_MAP):
 
 
 def remove_accented_chars(text):
-    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8', 'ignore')
+    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode(
+        'utf-8', 'ignore')
     return text
 
 
@@ -93,7 +97,8 @@ def remove_stopwords(text, is_lower_case=False, stopwords=stopword_list):
     if is_lower_case:
         filtered_tokens = [token for token in tokens if token not in stopwords]
     else:
-        filtered_tokens = [token for token in tokens if token.lower() not in stopwords]
+        filtered_tokens = [token for token in tokens if
+                           token.lower() not in stopwords]
     filtered_text = ' '.join(filtered_tokens)
     return filtered_text
 
@@ -148,7 +153,8 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
 
         # remove stopwords
         if stopword_removal:
-            doc = remove_stopwords(doc, is_lower_case=text_lower_case, stopwords=stopwords)
+            doc = remove_stopwords(doc, is_lower_case=text_lower_case,
+                                   stopwords=stopwords)
 
         # remove extra whitespace
         doc = re.sub(' +', ' ', doc)
