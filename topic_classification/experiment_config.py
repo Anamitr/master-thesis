@@ -5,13 +5,13 @@ from topic_classification.classifiers_definitions_utils import \
     svm_with_stochastic_gradient_descent_classifier, random_forest_classifier, \
     gradient_boosting_machines_classifier
 
-EXPERIMENT_NAME = 'tc#0.3'
-CLASSIFIER_ITERATION = 2
+EXPERIMENT_NAME = 'tc#1.3'
+CLASSIFIER_ITERATION = 1
 classifiers_tuples = (
     # multinominal_naive_bayes_classifier,
-    logistic_regression_classifier,
+    # logistic_regression_classifier,
     # support_vector_machines_classifier,
-    # svm_with_stochastic_gradient_descent_classifier,
+    svm_with_stochastic_gradient_descent_classifier,
     # random_forest_classifier,
     # gradient_boosting_machines_classifier
 )
