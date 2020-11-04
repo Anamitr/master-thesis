@@ -18,7 +18,7 @@ from topic_classification.experiment_config import \
     WORD2VEC_MODEL_SAVE_PATH, FAST_TEXT_SAVE_PATH
 from topic_classification.constants import *
 from topic_classification.dataset_utils import load_20newsgroups, \
-    fetch_preprocess_and_save_20newsgroups
+    fetch_preprocess_and_save_20newsgroups, load_preprocessed_news_category_dataset
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     create_bar_plot, create_2_bar_plot
@@ -32,7 +32,7 @@ import topic_classification.experiment_config as experiment_config
 
 from topic_classification.constants import TOPIC_CLASSIFICATION_DATA_PATH
 
-data_df = load_20newsgroups()
+data_df = load_preprocessed_news_category_dataset()
 
 train_corpus, test_corpus, train_label_names, \
 test_label_names = train_test_split(np.array(data_df['Clean Article']),
@@ -66,6 +66,8 @@ fasttext_model = fasttext.train_supervised(TOPIC_CLASSIFICATION_DATA_PATH +
                                            DATASET_NAME_20newsgroups +
                                            '_fasttext_train_formatted.txt',
                                            epoch=500)
+fasttext_model.save_model(CLASSIFIERS_AND_RESULTS_DIR_PATH + 'fasttext_model_' +
+                          CLASSIFIER_ITERATION)
 fasttext_model.test(TOPIC_CLASSIFICATION_DATA_PATH +
                     DATASET_NAME_20newsgroups +
                     '_fasttext_test_formatted.txt')
@@ -80,4 +82,4 @@ for i in range(0, len(test_corpus)):
         num_of_correctly_predicted_labels += 1
 acc = float(num_of_correctly_predicted_labels) / len(test_corpus)
 print('acc =', acc)
-# acc = 0.7059602649006622
+# acc = 0.44881331381927364
