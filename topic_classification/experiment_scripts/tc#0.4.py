@@ -9,7 +9,7 @@ import importlib
 import util
 import text_preprocessing.text_normalizer as tn
 from topic_classification.experiment_config import \
-    get_basic_statistical_classifiers, CLASSIFIERS_SAVE_PATH, RESULTS_PATH, \
+    get_basic_statistical_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, \
     CLASSIFIER_ITERATION, \
     WORD2VEC_MODEL_SAVE_PATH, FAST_TEXT_SAVE_PATH
 from topic_classification.constants import *
@@ -53,7 +53,7 @@ ft_model = FastText(tokenized_train, size=ft_num_features, window=20,
                     min_count=2, sample=1e-3, sg=1, iter=5, workers=10)
 util.save_object(ft_model, FAST_TEXT_SAVE_PATH)
 # # Load FastText
-w2v_model = util.load_object(FAST_TEXT_SAVE_PATH)
+# ft_model = util.load_object(FAST_TEXT_SAVE_PATH)
 
 # generate averaged word vector features from word2vec model
 avg_ft_train_features = document_vectorize(corpus=tokenized_train,
@@ -80,7 +80,7 @@ def train_and_save(classifier_list, classifier_name_list, training_data):
                                          training_data)
     util.save_object(results, RESULTS_PATH)
     util.save_classifier_list(classifier_list, classifier_name_list,
-                              CLASSIFIERS_SAVE_PATH)
+                              CLASSIFIERS_AND_RESULTS_DIR_PATH)
     return results
 
 

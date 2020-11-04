@@ -9,7 +9,7 @@ import importlib
 import util
 import text_preprocessing.text_normalizer as tn
 from topic_classification.experiment_config import \
-    get_basic_statistical_classifiers, CLASSIFIERS_SAVE_PATH, RESULTS_PATH, \
+    get_basic_statistical_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, \
     CLASSIFIER_ITERATION, \
     WORD2VEC_MODEL_SAVE_PATH
 from topic_classification.constants import *
@@ -84,7 +84,7 @@ def train_and_save(classifier_list, classifier_name_list, training_data):
                                          training_data)
     util.save_object(results, RESULTS_PATH)
     util.save_classifier_list(classifier_list, classifier_name_list,
-                              CLASSIFIERS_SAVE_PATH)
+                              CLASSIFIERS_AND_RESULTS_DIR_PATH)
     return results
 
 

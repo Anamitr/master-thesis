@@ -5,7 +5,7 @@ from topic_classification.classifiers_definitions_utils import \
     svm_with_stochastic_gradient_descent_classifier, random_forest_classifier, \
     gradient_boosting_machines_classifier
 
-EXPERIMENT_NAME = 'tc#0.4a'
+EXPERIMENT_NAME = 'tc#0.4b'
 CLASSIFIER_ITERATION = 1
 classifiers_tuples = (
     # multinominal_naive_bayes_classifier,
@@ -29,13 +29,13 @@ def get_basic_statistical_classifiers():
 
 
 # Save paths
-CLASSIFIERS_SAVE_PATH = '/home/konrad/Repositories/master-diploma/' \
+CLASSIFIERS_AND_RESULTS_DIR_PATH = '/home/konrad/Repositories/master-diploma/' \
                         'topic_classification/trained_classifiers/' \
-                        + EXPERIMENT_NAME + '/'
-RESULTS_PATH = CLASSIFIERS_SAVE_PATH + 'results_' + str(
+                                   + EXPERIMENT_NAME + '/'
+RESULTS_PATH = CLASSIFIERS_AND_RESULTS_DIR_PATH + 'results_' + str(
     CLASSIFIER_ITERATION) + '.pkl'
-WORD2VEC_MODEL_SAVE_PATH = CLASSIFIERS_SAVE_PATH + 'w2v_model_' + str(
+WORD2VEC_MODEL_SAVE_PATH = CLASSIFIERS_AND_RESULTS_DIR_PATH + 'w2v_model_' + str(
     CLASSIFIER_ITERATION) + '.pkl'
-FAST_TEXT_SAVE_PATH = CLASSIFIERS_SAVE_PATH + 'fasttext_model_' + str(
+FAST_TEXT_SAVE_PATH = CLASSIFIERS_AND_RESULTS_DIR_PATH + 'fasttext_model_' + str(
     CLASSIFIER_ITERATION) + '.pkl'
 

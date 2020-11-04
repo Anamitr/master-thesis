@@ -10,7 +10,7 @@ import importlib
 import util
 import text_preprocessing.text_normalizer as tn
 from topic_classification.experiment_config import \
-    get_basic_statistical_classifiers, CLASSIFIERS_SAVE_PATH, RESULTS_PATH, \
+    get_basic_statistical_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, \
     CLASSIFIER_ITERATION, \
     WORD2VEC_MODEL_SAVE_PATH
 from topic_classification.constants import *
@@ -44,9 +44,9 @@ train_corpus, test_corpus, train_label_names, test_label_names = train_test_spli
 
 ###
 # feature engineering with GloVe model
-TRAIN_NLP_PATH = CLASSIFIERS_SAVE_PATH + 'train_nlp_' + \
+TRAIN_NLP_PATH = CLASSIFIERS_AND_RESULTS_DIR_PATH + 'train_nlp_' + \
                  str(CLASSIFIER_ITERATION) + '.pkl'
-TEST_NLP_PATH = CLASSIFIERS_SAVE_PATH + 'test_nlp_' + str(CLASSIFIER_ITERATION) + \
+TEST_NLP_PATH = CLASSIFIERS_AND_RESULTS_DIR_PATH + 'test_nlp_' + str(CLASSIFIER_ITERATION) + \
                 '.pkl'
 
 
@@ -54,12 +54,12 @@ def read_from_spacy_and_save():
     print('Reading embeddings from spacy (GloVe)')
     print('Train features')
     train_nlp = [tn.spacy_english_model(item) for item in train_corpus]
-    util.save_object(train_nlp, CLASSIFIERS_SAVE_PATH + 'train_nlp_' +
+    util.save_object(train_nlp, CLASSIFIERS_AND_RESULTS_DIR_PATH + 'train_nlp_' +
                      str(CLASSIFIER_ITERATION) + '.pkl')
     train_glove_features = np.array([item.vector for item in train_nlp])
     print('Test features')
     test_nlp = [tn.spacy_english_model(item) for item in test_corpus]
-    util.save_object(train_nlp, CLASSIFIERS_SAVE_PATH + 'test_nlp_' +
+    util.save_object(train_nlp, CLASSIFIERS_AND_RESULTS_DIR_PATH + 'test_nlp_' +
                      str(CLASSIFIER_ITERATION) + '.pkl')
     test_glove_features = np.array([item.vector for item in test_nlp])
     return train_glove_features, test_glove_features
@@ -100,7 +100,7 @@ def train_and_save(classifier_list, classifier_name_list, training_data):
                                          training_data)
     util.save_object(results, RESULTS_PATH)
     util.save_classifier_list(classifier_list, classifier_name_list,
-                              CLASSIFIERS_SAVE_PATH)
+                              CLASSIFIERS_AND_RESULTS_DIR_PATH)
     return results
 
 

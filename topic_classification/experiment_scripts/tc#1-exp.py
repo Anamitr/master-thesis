@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import topic_classification.constants as constants
 from topic_classification.display_utils import *
 from topic_classification.experiment_config import get_basic_statistical_classifiers, \
-    CLASSIFIERS_SAVE_PATH, RESULTS_PATH
+    CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH
 from topic_classification.constants import *
 from topic_classification.dataset_utils import \
     load_preprocessed_news_category_dataset
@@ -64,14 +64,14 @@ def train_and_save(classifier_list, classifier_name_list, training_data):
                                               training_data))
     util.save_object(results, RESULTS_PATH)
     util.save_classifier_list(classifier_list, classifier_name_list,
-                              CLASSIFIERS_SAVE_PATH)
+                              CLASSIFIERS_AND_RESULTS_DIR_PATH)
 
 
 # Train and save on disk
 # train_and_save(classifier_list, classifier_name_list, training_data)
 # #Load from disk
 classifier_list = util.load_classifier_list(classifier_name_list,
-                                            CLASSIFIERS_SAVE_PATH)
+                                            CLASSIFIERS_AND_RESULTS_DIR_PATH)
 results = util.load_object(RESULTS_PATH)
 
 # results[0] = array of crossvalidation, [1] crossvalidation scores,

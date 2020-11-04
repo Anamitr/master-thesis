@@ -2,7 +2,10 @@ from sklearn.model_selection import cross_val_score
 import numpy as np
 import time
 
+import util
 from topic_classification.datastructures import TrainingData
+from topic_classification.experiment_config import CLASSIFIERS_AND_RESULTS_DIR_PATH, \
+    CLASSIFIER_ITERATION
 
 
 def train_multiple_classifiers(classifier_list, classifier_name_list, training_data:
@@ -14,10 +17,19 @@ TrainingData):
 
     results_list = []
     for i in range(0, len(classifier_list)):
-        results_list.append(train_classifier_and_display_results(classifier_list[i],
-                                                                 classifier_name_list[
-                                                                     i],
-                                                                 training_data))
+        results = train_classifier_and_display_results(classifier_list[i],
+                                                       classifier_name_list[i],
+                                                       training_data)
+        results_list.append(results)
+
+        util.save_object(results,
+                         CLASSIFIERS_AND_RESULTS_DIR_PATH +
+                         util.convert_name_to_filename(classifier_name_list[i])
+                         + '_' + str(CLASSIFIER_ITERATION) + '_results.pkl')
+        util.save_object(classifier_list[i],
+                         CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
+                             classifier_name_list[i])
+                         + '_' + str(CLASSIFIER_ITERATION) + '.pkl')
     return results_list
 
 
