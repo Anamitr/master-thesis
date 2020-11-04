@@ -11,3 +11,4 @@ datasets/*
 *.png
 *.json
 *.bp
+*.txt
