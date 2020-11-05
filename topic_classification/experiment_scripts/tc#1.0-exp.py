@@ -1,33 +1,31 @@
 import warnings
 
-import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 
 # %matplotlib inline
-import util
 import topic_classification.constants as constants
-from topic_classification.experiment_config import get_basic_statistical_classifiers, \
+from topic_classification.display_utils import *
+from topic_classification.experiment_config import get_chosen_classifiers, \
     CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH
 from topic_classification.constants import *
-from topic_classification.dataset_utils import load_20newsgroups
+from topic_classification.dataset_utils import \
+    load_preprocessed_news_category_dataset
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     get_train_test_distribution_by_labels_names, \
-    create_bar_plot, create_2_bar_plot
+    create_bar_plot
 from topic_classification.train_utils import train_multiple_classifiers
 
 warnings.filterwarnings('ignore')
 
-topic_classification.experiment_config.EXPERIMENT_NAME = 'tc#0'
+topic_classification.experiment_config.EXPERIMENT_NAME = 'tc#1'
 constants.reload_constants()
-from topic_classification.constants import *
 
-# # Fetch and preprocess data or load from disk
-# data_df = fetch_preprocess_and_save_20newsgroups()
+# # Load news cateogry dataset from json
+# data_df = fetch_news_category_dataset()
 
-# # Load dataset from disk
-data_df = load_20newsgroups()
+data_df = load_preprocessed_news_category_dataset()
 
 # # For some reason dataset still contains np.nan
 data_df = data_df.dropna()
@@ -55,20 +53,22 @@ training_data = TrainingData(cv_train_features, train_label_names,
 
 # # Get classifier definitions
 classifier_list, classifier_name_list, classifier_name_shortcut_list = \
-    get_basic_statistical_classifiers()
+    get_chosen_classifiers()
+
+results = []
 
 
 def train_and_save(classifier_list, classifier_name_list, training_data):
-    results = train_multiple_classifiers(classifier_list, classifier_name_list,
-                                         training_data)
+    global results
+    results.append(train_multiple_classifiers(classifier_list, classifier_name_list,
+                                              training_data))
     util.save_object(results, RESULTS_PATH)
     util.save_classifier_list(classifier_list, classifier_name_list,
                               CLASSIFIERS_AND_RESULTS_DIR_PATH)
-    return results
 
 
 # Train and save on disk
-# results = train_and_save(classifier_list, classifier_name_list, training_data)
+# train_and_save(classifier_list, classifier_name_list, training_data)
 # #Load from disk
 classifier_list = util.load_classifier_list(classifier_name_list,
                                             CLASSIFIERS_AND_RESULTS_DIR_PATH)

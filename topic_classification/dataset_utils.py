@@ -1,3 +1,5 @@
+import os
+
 from sklearn.datasets import fetch_20newsgroups
 import pandas as pd
 
@@ -83,6 +85,41 @@ def load_preprocessed_news_category_dataset():
         '_preprocessed.csv').dropna()
 
 
+def fetch_preprocess_and_save_bbc_news_summary():
+    data_path = TOPIC_CLASSIFICATION_DATA_PATH + 'BBC News Summary/News Articles/'
+    print("Collecting data.... ")
+    data = []
+    count = 0
+
+    for dir in os.listdir(data_path):
+        for file in os.listdir(data_path + dir):
+            try:
+                text = ''
+                name = file
+                myfile = open(data_path + dir + '/' + file, "r")
+                text = myfile.read()
+                count += 1
+                data.append([text, dir])
+            except:
+                continue
+        print(str(count) + " text files found in " + dir + " folder.")
+        count = 0
+
+    print("Data loaded")
+    data_df = pd.DataFrame(data, columns=['Article', 'Target Name'])
+    data_df = preprocess_data_frame(data_df)
+    data_df.to_csv(
+        TOPIC_CLASSIFICATION_DATA_PATH + CURRENT_DATASET + '_preprocessed.csv',
+        index=False)
+    return data_df
+
+
+def load_preprocessed_bbc_news_summary():
+    return pd.read_csv(
+        TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_bbc_news_summary +
+        '_preprocessed.csv').dropna()
+
+
 def preprocess_data_frame(data_df: pd.DataFrame):
     # Preprocessing
     total_nulls = data_df[data_df.Article.str.strip() == ''].shape[0]
@@ -108,3 +145,10 @@ def preprocess_data_frame(data_df: pd.DataFrame):
                                       stopword_removal=True, stopwords=stopword_list)
     data_df['Clean Article'] = norm_corpus
     return data_df
+
+
+def get_dataset_avg_length(data_df: pd.DataFrame):
+    text_lengths = [len(text) for text in data_df['Clean Article']]
+    average_text_length = sum(text_lengths) / len(text_lengths)
+    print('Average text length:', round(average_text_length))
+    return average_text_length

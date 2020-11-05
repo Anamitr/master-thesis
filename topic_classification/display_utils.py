@@ -18,6 +18,19 @@ def get_train_test_distribution_by_labels_names(train_label_names, test_label_na
                          ascending=False))
 
 
+def create_cv_test_time_plots(results: list, classifier_name_shortcut_list: list):
+    cv_mean_scores = [round(result[1], SCORE_DECIMAL_PLACES) for result in results]
+    test_scores = [round(result[2], SCORE_DECIMAL_PLACES) for result in results]
+    elapsed_times = [round(result[3], TIME_DECIMAL_PLACES) for result in results]
+    # create_bar_plot(classifier_name_shortcut_list, 'Classifier scores', 'Accuracy',
+    #                 cv_mean_scores, y_range_tuple=(0, 1))
+    create_2_bar_plot(classifier_name_shortcut_list, 'Classifier scores', 'Accuracy',
+                      cv_mean_scores, test_scores, 'cv means', 'test set',
+                      y_range_tuple=(0, 1))
+    create_bar_plot(classifier_name_shortcut_list, 'Elapsed training times',
+                    'Time in seconds', elapsed_times, color='red')
+
+
 def create_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name, scores,
                     y_range_tuple=None, color='blue'):
     x = np.arange(len(classifier_name_shortcut_list))
@@ -45,13 +58,15 @@ def create_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name, sco
         plt.ylim((0, 1))
     plt.show()
     fig.savefig(
-        CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(plot_title) + '_'
+        CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
+            plot_title) + '_'
         + str(CLASSIFIER_ITERATION) + '.png')
 
 
 def create_2_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name,
                       scores1, scores2, scores1_label, scores2_label,
-                      y_range_tuple=None, color1='blue', color2='orange'):
+                      y_range_tuple=None, color1='blue', color2='orange',
+                      should_autolabel=True):
     x = np.arange(len(classifier_name_shortcut_list))
     fig, ax = plt.subplots()
     bars1 = ax.bar(x - BAR_WIDTH / 2, scores1, BAR_WIDTH, color=color1,
@@ -86,14 +101,18 @@ def create_2_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name,
                         ha='center', va='bottom')
             bar_labels_y_list.append(y_list)
 
-    autolabel(bars1, bar_labels_y_list)
-    autolabel(bars2, bar_labels_y_list, 2)
+    if should_autolabel:
+        autolabel(bars1, bar_labels_y_list)
+        autolabel(bars2, bar_labels_y_list, 2)
     # fig.tight_layout()
-    if y_range_tuple is not None:
+    if y_range_tuple is None:
         plt.ylim((0, 1))
+    else:
+        plt.ylim(y_range_tuple)
     plt.show()
     fig.savefig(
-        CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(plot_title) + '_'
+        CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
+            plot_title) + '_'
         + str(CLASSIFIER_ITERATION) + '.png')
 
 

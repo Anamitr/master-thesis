@@ -12,7 +12,7 @@ import importlib
 import util
 import text_preprocessing.text_normalizer as tn
 from topic_classification.experiment_config import \
-    get_basic_statistical_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, \
+    get_chosen_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, \
     CLASSIFIER_ITERATION, \
     WORD2VEC_MODEL_SAVE_PATH, FAST_TEXT_SAVE_PATH
 from topic_classification.constants import *
@@ -71,7 +71,7 @@ training_data = TrainingData(avg_ft_train_features, train_label_names,
                              avg_ft_test_features, test_label_names)
 
 classifier_list, classifier_name_list, classifier_name_shortcut_list = \
-    get_basic_statistical_classifiers()
+    get_chosen_classifiers()
 
 
 def train_and_save(classifier_list, classifier_name_list, training_data):

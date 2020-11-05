@@ -5,7 +5,7 @@ import time
 import util
 from topic_classification.datastructures import TrainingData
 from topic_classification.experiment_config import CLASSIFIERS_AND_RESULTS_DIR_PATH, \
-    CLASSIFIER_ITERATION
+    CLASSIFIER_ITERATION, RESULTS_PATH
 
 
 def train_multiple_classifiers(classifier_list, classifier_name_list, training_data:
@@ -30,6 +30,7 @@ TrainingData):
                          CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
                              classifier_name_list[i])
                          + '_' + str(CLASSIFIER_ITERATION) + '.pkl')
+    util.save_object(results, RESULTS_PATH)
     return results_list
 
 

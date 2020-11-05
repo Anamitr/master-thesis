@@ -12,7 +12,7 @@ import importlib
 import util
 import text_preprocessing.text_normalizer as tn
 from topic_classification.experiment_config import \
-    get_basic_statistical_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, \
+    get_chosen_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, \
     RESULTS_PATH, \
     CLASSIFIER_ITERATION, \
     WORD2VEC_MODEL_SAVE_PATH, FAST_TEXT_SAVE_PATH

@@ -4,6 +4,7 @@ TOPIC_CLASSIFICATION_DATA_PATH = '/home/konrad/Repositories/master-diploma/' \
                                  'topic_classification/topic_class_data/'
 DATASET_NAME_20newsgroups = '20newsgroups'
 DATASET_NAME_news_category_dataset = 'news_category_dataset'
+DATASET_NAME_bbc_news_summary = 'bbc_news_summary'
 CURRENT_DATASET = DATASET_NAME_news_category_dataset
 
 # Logging config

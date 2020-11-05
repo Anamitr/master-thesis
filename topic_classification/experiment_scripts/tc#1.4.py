@@ -12,7 +12,7 @@ from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     create_bar_plot, create_2_bar_plot
 from topic_classification.experiment_config import \
-    get_basic_statistical_classifiers
+    get_chosen_classifiers
 from topic_classification.feature_extraction_utils import \
     document_vectorize_with_fasttext_model
 from topic_classification.train_utils import train_multiple_classifiers
@@ -58,7 +58,7 @@ training_data = TrainingData(avg_ft_train_features, train_label_names,
                              avg_ft_test_features, test_label_names)
 
 classifier_list, classifier_name_list, classifier_name_shortcut_list = \
-    get_basic_statistical_classifiers()
+    get_chosen_classifiers()
 
 
 def train_and_save(classifier_list, classifier_name_list, training_data):

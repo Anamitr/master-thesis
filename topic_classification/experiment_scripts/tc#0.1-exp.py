@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 # %matplotlib inline
 import util
 import topic_classification.constants as constants
-from topic_classification.experiment_config import get_basic_statistical_classifiers, \
+from topic_classification.experiment_config import get_chosen_classifiers, \
     CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH
 from topic_classification.constants import *
 from topic_classification.dataset_utils import load_20newsgroups, \
@@ -51,7 +51,7 @@ training_data = TrainingData(tv_train_features, train_label_names,
 
 # # Get classifier definitions
 classifier_list, classifier_name_list, classifier_name_shortcut_list = \
-    get_basic_statistical_classifiers()
+    get_chosen_classifiers()
 
 
 def train_and_save(classifier_list, classifier_name_list, training_data):
