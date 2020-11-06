@@ -51,7 +51,7 @@ w2v_num_features = 1000
 # w2v_model = gensim.models.Word2Vec(sentences=tokenized_train, size=w2v_num_features,
 #                                    window=100, min_count=2, sample=1e-3, sg=1,
 #                                    iter=5, workers=10)
-# util.save_object(w2v_model, CLASSIFIERS_SAVE_PATH + 'w2v_model' + str(
+# util.save_object(w2v_model, CLASSIFIERS_AND_RESULTS_DIR_PATH + 'w2v_model' + str(
 #     CLASSIFIER_ITERATION) + '.pkl')
 # # Load word2vec model
 w2v_model = util.load_object(WORD2VEC_MODEL_SAVE_PATH)
@@ -91,7 +91,7 @@ def train_and_save(classifier_list, classifier_name_list, training_data):
 results = train_and_save(classifier_list, classifier_name_list, training_data)
 # # Load from disk
 # classifier_list = util.load_classifier_list(classifier_name_list,
-#                                             CLASSIFIERS_SAVE_PATH)
+#                                             CLASSIFIERS_AND_RESULTS_DIR_PATH)
 # results = util.load_object(RESULTS_PATH)
 
 # results[0] = array of crossvalidation, [1] crossvalidation scores,

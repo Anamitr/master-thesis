@@ -71,7 +71,7 @@ def train_and_save(classifier_list, classifier_name_list, training_data):
 results = train_and_save(classifier_list, classifier_name_list, training_data)
 # #Load from disk
 # classifier_list = util.load_classifier_list(classifier_name_list,
-#                                             CLASSIFIERS_SAVE_PATH)
+#                                             CLASSIFIERS_AND_RESULTS_DIR_PATH)
 # results = util.load_object(RESULTS_PATH)
 
 # results[0] = array of crossvalidation, [1] crossvalidation scores,

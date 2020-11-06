@@ -17,7 +17,7 @@ from topic_classification.display_utils import \
 from topic_classification.experiment_config import get_chosen_classifiers, \
     CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, TEST_SET_SIZE_RATIO
 from topic_classification.feature_extraction_utils import \
-    get_simple_bag_of_words_features
+    get_simple_bag_of_words_features, get_tf_idf_features
 from topic_classification.train_utils import train_multiple_classifiers
 
 warnings.filterwarnings('ignore')
@@ -31,15 +31,14 @@ get_dataset_avg_length(data_df)
 
 # # Split on train and test dataset
 train_corpus, test_corpus, train_label_names, test_label_names = train_test_split(
-    np.array(data_df['Clean Article']),
-    np.array(data_df['Target Name']),
+    np.array(data_df['Clean Article']), np.array(data_df['Target Name']),
     test_size=TEST_SET_SIZE_RATIO, random_state=42)
 
-cv_train_features, cv_test_features = get_simple_bag_of_words_features(train_corpus,
+tv_train_features, tv_test_features = get_tf_idf_features(train_corpus,
                                                                        test_corpus)
 # # pack data in one class
-training_data = TrainingData(cv_train_features, train_label_names,
-                             cv_test_features, test_label_names)
+training_data = TrainingData(tv_train_features, train_label_names,
+                             tv_test_features, test_label_names)
 
 # # Get classifier definitions
 classifier_list, classifier_name_list, classifier_name_shortcut_list = \

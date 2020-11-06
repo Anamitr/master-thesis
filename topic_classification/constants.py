@@ -19,8 +19,8 @@ TIME_DECIMAL_PLACES = 2
 
 
 # def reload_constants():
-#     topic_classification.experiment_config.CLASSIFIERS_SAVE_PATH = '/home/konrad/Repositories/master-diploma/' \
+#     topic_classification.experiment_config.CLASSIFIERS_AND_RESULTS_DIR_PATH = '/home/konrad/Repositories/master-diploma/' \
 #                             'topic_classification/trained_classifiers/' \
 #                                                                    + EXPERIMENT_NAME + '/'
-#     topic_classification.experiment_config.RESULTS_PATH = topic_classification.experiment_config.CLASSIFIERS_SAVE_PATH + 'results_' + str(
+#     topic_classification.experiment_config.RESULTS_PATH = topic_classification.experiment_config.CLASSIFIERS_AND_RESULTS_DIR_PATH + 'results_' + str(
 #         CLASSIFIER_ITERATION) + '.pkl'
