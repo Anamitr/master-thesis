@@ -11,11 +11,10 @@ from topic_classification.dataset_utils import \
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     create_bar_plot, create_2_bar_plot
-from topic_classification.experiment_config import \
-    get_chosen_classifiers
 from topic_classification.feature_extraction_utils import \
     document_vectorize_with_fasttext_model
-from topic_classification.train_utils import train_multiple_classifiers
+from topic_classification.train_utils import train_multiple_classifiers, \
+    get_chosen_classifiers
 
 data_df = load_preprocessed_news_category_dataset()
 

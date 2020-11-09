@@ -7,15 +7,15 @@ from sklearn.model_selection import train_test_split
 # %matplotlib inline
 import util
 import topic_classification.constants as constants
-from topic_classification.experiment_config import get_chosen_classifiers, \
-    CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH
+from topic_classification.experiment_config import CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH
 from topic_classification.constants import *
 from topic_classification.dataset_utils import load_20newsgroups
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     get_train_test_distribution_by_labels_names, \
     create_bar_plot, create_2_bar_plot
-from topic_classification.train_utils import train_multiple_classifiers
+from topic_classification.train_utils import train_multiple_classifiers, \
+    get_chosen_classifiers
 
 warnings.filterwarnings('ignore')
 

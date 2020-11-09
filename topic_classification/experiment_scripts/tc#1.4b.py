@@ -12,7 +12,7 @@ import importlib
 import util
 import text_preprocessing.text_normalizer as tn
 from topic_classification.experiment_config import \
-    get_chosen_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, \
+    CLASSIFIERS_AND_RESULTS_DIR_PATH, \
     RESULTS_PATH, \
     CLASSIFIER_ITERATION, \
     WORD2VEC_MODEL_SAVE_PATH, FAST_TEXT_SAVE_PATH
@@ -22,7 +22,8 @@ from topic_classification.dataset_utils import load_20newsgroups, \
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     create_bar_plot, create_2_bar_plot
-from topic_classification.train_utils import train_multiple_classifiers
+from topic_classification.train_utils import train_multiple_classifiers, \
+    get_chosen_classifiers
 from topic_classification.feature_extraction_utils import \
     document_vectorize, document_vectorize_with_fasttext_model
 from topic_classification.dataset_utils import load_20newsgroups

@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import util
 
 from topic_classification.constants import *
-from topic_classification.experiment_config import CLASSIFIER_ITERATION, \
-    CLASSIFIERS_AND_RESULTS_DIR_PATH
+# from topic_classification.experiment_config import CLASSIFIER_ITERATION, \
+#     CLASSIFIERS_AND_RESULTS_DIR_PATH
 
 
 def get_train_test_distribution_by_labels_names(train_label_names, test_label_names):
@@ -57,10 +57,10 @@ def create_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name, sco
     if y_range_tuple is not None:
         plt.ylim((0, 1))
     plt.show()
-    fig.savefig(
-        CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
-            plot_title) + '_'
-        + str(CLASSIFIER_ITERATION) + '.png')
+    # fig.savefig(
+    #     CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
+    #         plot_title) + '_'
+    #     + str(CLASSIFIER_ITERATION) + '.png')
 
 
 def create_2_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name,
@@ -110,10 +110,10 @@ def create_2_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name,
     else:
         plt.ylim(y_range_tuple)
     plt.show()
-    fig.savefig(
-        CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
-            plot_title) + '_'
-        + str(CLASSIFIER_ITERATION) + '.png')
+    # fig.savefig(
+    #     CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
+    #         plot_title) + '_'
+    #     + str(CLASSIFIER_ITERATION) + '.png')
 
 
 def display_bar_plot(title, labels, scores, y_label):
@@ -124,4 +124,4 @@ def display_bar_plot(title, labels, scores, y_label):
     plt.ylabel = y_label
     ax.bar(labels, scores)
     plt.show()
-    plt.savefig(CLASSIFIERS_AND_RESULTS_DIR_PATH + 'plot.png')
+    # plt.savefig(CLASSIFIERS_AND_RESULTS_DIR_PATH + 'plot.png')

@@ -9,7 +9,7 @@ import importlib
 import util
 import text_preprocessing.text_normalizer as tn
 from topic_classification.experiment_config import \
-    get_chosen_classifiers, CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, \
+    CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, \
     CLASSIFIER_ITERATION, \
     WORD2VEC_MODEL_SAVE_PATH
 from topic_classification.constants import *
@@ -18,9 +18,10 @@ from topic_classification.dataset_utils import load_20newsgroups, \
 from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     create_bar_plot, create_2_bar_plot
-from topic_classification.train_utils import train_multiple_classifiers
+from topic_classification.train_utils import train_multiple_classifiers, \
+    get_chosen_classifiers
 from topic_classification.feature_extraction_utils import \
-    document_vectorize, get_word2vec_features
+    document_vectorize, get_word2vec_trained_model
 
 import gensim
 import logging  # Setting up the loggings to monitor gensim
@@ -49,7 +50,7 @@ tokenized_test = [tn.tokenizer.tokenize(text) for text in test_corpus]
 
 # # build and save word2vec model
 w2v_num_features = 1000
-w2v_model = get_word2vec_features(tokenized_train, w2v_num_features)
+w2v_model = get_word2vec_trained_model(tokenized_train, w2v_num_features)
 # # Load word2vec model
 # w2v_model = util.load_object(WORD2VEC_MODEL_SAVE_PATH)
 

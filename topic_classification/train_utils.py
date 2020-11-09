@@ -4,8 +4,8 @@ import time
 
 import util
 from topic_classification.datastructures import TrainingData
-from topic_classification.experiment_config import CLASSIFIERS_AND_RESULTS_DIR_PATH, \
-    CLASSIFIER_ITERATION, RESULTS_PATH
+# from topic_classification.experiment_config import CLASSIFIERS_AND_RESULTS_DIR_PATH, \
+#     CLASSIFIER_ITERATION, RESULTS_PATH
 
 
 def train_multiple_classifiers(classifier_list, classifier_name_list, training_data:
@@ -22,15 +22,15 @@ TrainingData):
                                                        training_data)
         results_list.append(results)
 
-        util.save_object(results,
-                         CLASSIFIERS_AND_RESULTS_DIR_PATH +
-                         util.convert_name_to_filename(classifier_name_list[i])
-                         + '_' + str(CLASSIFIER_ITERATION) + '_results.pkl')
-        util.save_object(classifier_list[i],
-                         CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
-                             classifier_name_list[i])
-                         + '_' + str(CLASSIFIER_ITERATION) + '.pkl')
-    util.save_object(results, RESULTS_PATH)
+        # util.save_object(results,
+        #                  CLASSIFIERS_AND_RESULTS_DIR_PATH +
+        #                  util.convert_name_to_filename(classifier_name_list[i])
+        #                  + '_' + str(CLASSIFIER_ITERATION) + '_results.pkl')
+        # util.save_object(classifier_list[i],
+        #                  CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
+        #                      classifier_name_list[i])
+        #                  + '_' + str(CLASSIFIER_ITERATION) + '.pkl')
+    # util.save_object(results, RESULTS_PATH)
     return results_list
 
 
@@ -59,3 +59,14 @@ def train_classifier_with_count_vectorizer(classifier, training_data: TrainingDa
                                           training_data.test_label_names)
 
     return [mnb_bow_cv_scores, mnb_bow_cv_mean_score, mnb_bow_test_score]
+
+
+def get_chosen_classifiers(classifiers_tuples):
+    classifier_list = [classifier_tuple[0] for classifier_tuple in
+                       classifiers_tuples]
+    classifier_name_list = [classifier_tuple[1] for classifier_tuple in
+                            classifiers_tuples]
+    classifier_name_shortcut_list = [classifier_tuple[2] for classifier_tuple in
+                                     classifiers_tuples]
+
+    return classifier_list, classifier_name_list, classifier_name_shortcut_list

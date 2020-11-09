@@ -3,8 +3,6 @@ import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 
 import util
-from topic_classification.experiment_config import CLASSIFIER_ITERATION, \
-    CLASSIFIERS_AND_RESULTS_DIR_PATH
 
 
 def document_vectorize(corpus, model, num_features):
@@ -70,11 +68,36 @@ def get_tf_idf_features(train_corpus, test_corpus):
     return tv_train_features, tv_test_features
 
 
-def get_word2vec_features(tokenized_train: list, w2v_num_features: int):
+def get_word2vec_trained_model(tokenized_train: list, num_of_features: int):
     w2v_model = gensim.models.Word2Vec(sentences=tokenized_train,
-                                       size=w2v_num_features,
+                                       size=num_of_features,
                                        window=100, min_count=2, sample=1e-3, sg=1,
                                        iter=5, workers=10)
-    util.save_object(w2v_model, CLASSIFIERS_AND_RESULTS_DIR_PATH + 'w2v_model' + str(
-        CLASSIFIER_ITERATION) + '.pkl')
+    # util.save_object(w2v_model, CLASSIFIERS_AND_RESULTS_DIR_PATH + 'w2v_model'
+    #                  + str(CLASSIFIER_ITERATION) + '.pkl')
     return w2v_model
+
+
+def get_fasttext_trained_model(tokenized_train: list, num_of_features: int):
+    w2v_model = gensim.models.Word2Vec(sentences=tokenized_train,
+                                       size=num_of_features,
+                                       window=100, min_count=2, sample=1e-3, sg=1,
+                                       iter=5, workers=10)
+    # util.save_object(w2v_model, CLASSIFIERS_AND_RESULTS_DIR_PATH + 'fasttext_model'
+    #                  + str(CLASSIFIER_ITERATION) + '.pkl')
+    return w2v_model
+
+
+def get_document_embeddings(tokenized_train, tokenized_test, embedding_model,
+                                                     num_of_features,
+                            vocabulary):
+    train_features = document_vectorize_with_fasttext_model(
+        corpus=tokenized_train,
+        fasttext_model=embedding_model,
+        num_features=num_of_features,
+        vocabulary=vocabulary)
+    test_features = document_vectorize_with_fasttext_model(
+        corpus=tokenized_test,
+        fasttext_model=embedding_model,
+        num_features=num_of_features,
+        vocabulary=vocabulary)

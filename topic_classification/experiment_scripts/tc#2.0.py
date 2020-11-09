@@ -14,11 +14,11 @@ from topic_classification.datastructures import TrainingData
 from topic_classification.display_utils import \
     get_train_test_distribution_by_labels_names, \
     create_bar_plot, create_2_bar_plot, create_cv_test_time_plots
-from topic_classification.experiment_config import get_chosen_classifiers, \
-    CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, TEST_SET_SIZE_RATIO
+from topic_classification.experiment_config import CLASSIFIERS_AND_RESULTS_DIR_PATH, RESULTS_PATH, TEST_SET_SIZE_RATIO
 from topic_classification.feature_extraction_utils import \
     get_simple_bag_of_words_features
-from topic_classification.train_utils import train_multiple_classifiers
+from topic_classification.train_utils import train_multiple_classifiers, \
+    get_chosen_classifiers
 
 warnings.filterwarnings('ignore')
 
