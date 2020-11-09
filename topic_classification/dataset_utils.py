@@ -4,6 +4,7 @@ from sklearn.datasets import fetch_20newsgroups
 import pandas as pd
 
 import text_preprocessing.text_normalizer as tn
+import util
 
 from topic_classification.constants import TOPIC_CLASSIFICATION_DATA_PATH, \
     DATASET_NAME_20newsgroups
@@ -152,3 +153,6 @@ def get_dataset_avg_length(data_df: pd.DataFrame):
     average_text_length = sum(text_lengths) / len(text_lengths)
     print('Average text length:', round(average_text_length))
     return average_text_length
+
+
+

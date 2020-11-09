@@ -1,3 +1,4 @@
+import fasttext
 import gensim
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -78,18 +79,16 @@ def get_word2vec_trained_model(tokenized_train: list, num_of_features: int):
     return w2v_model
 
 
-def get_fasttext_trained_model(tokenized_train: list, num_of_features: int):
-    w2v_model = gensim.models.Word2Vec(sentences=tokenized_train,
-                                       size=num_of_features,
-                                       window=100, min_count=2, sample=1e-3, sg=1,
-                                       iter=5, workers=10)
+def train_fasttext_model(train_data_path: str, num_of_features: int, epoch=100):
+    fasttext_model = fasttext.train_unsupervised(train_data_path, epoch=epoch,
+                                                 dim=num_of_features)
     # util.save_object(w2v_model, CLASSIFIERS_AND_RESULTS_DIR_PATH + 'fasttext_model'
     #                  + str(CLASSIFIER_ITERATION) + '.pkl')
-    return w2v_model
+    return fasttext_model
 
 
 def get_document_embeddings(tokenized_train, tokenized_test, embedding_model,
-                                                     num_of_features,
+                            num_of_features,
                             vocabulary):
     train_features = document_vectorize_with_fasttext_model(
         corpus=tokenized_train,

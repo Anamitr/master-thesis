@@ -1,3 +1,6 @@
+import os
+
+import fasttext
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -19,7 +22,7 @@ from topic_classification.display_utils import create_2_bar_plot, create_bar_plo
 from topic_classification.feature_extraction_utils import \
     get_simple_bag_of_words_features, get_tf_idf_features, \
     get_word2vec_trained_model, document_vectorize_with_fasttext_model, \
-    document_vectorize, get_fasttext_trained_model
+    document_vectorize, train_fasttext_model
 from topic_classification.train_utils import get_chosen_classifiers, \
     train_multiple_classifiers
 
@@ -57,21 +60,26 @@ class ExperimentController:
         self.exp_name = exp_name
         self.classifier_iter = classifier_iter
         # Paths
-        self.CLASSIFIERS_AND_RESULTS_DIR_PATH = '/home/konrad/Repositories/' \
-                                                'master-diploma/topic_classification' \
-                                                '/trained_classifiers/' \
+        self.TOPIC_CLASSIFICATION_DIR_PATH = '/home/konrad/Repositories/' \
+                                             'master-diploma/topic_classification/'
+        self.TOPIC_CLASSIFICATION_DATA_PATH = self.TOPIC_CLASSIFICATION_DIR_PATH + \
+                                              'topic_class_data/'
+        self.CLASSIFIERS_AND_RESULTS_DIR_PATH = self.TOPIC_CLASSIFICATION_DIR_PATH \
+                                                + 'trained_classifiers/' \
                                                 + self.exp_name + '/'
         self.RESULTS_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + 'results_' + \
                             str(self.classifier_iter) + '.pkl'
         self.WORD2VEC_MODEL_SAVE_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + \
                                         'w2v_model_' + str(
             self.classifier_iter) + '.pkl'
+        self.TRAIN_DATA_FOR_FASTTEXT_PATH = None
+        self.TEST_DATA_FOR_FASTTEXT_PATH = None
         self.FAST_TEXT_SAVE_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + \
                                    'fasttext_model_' + \
                                    str(self.classifier_iter) + '.pkl'
 
         # Experiment specific
-        self.dataset_name = None
+        self.dataset_enum = None
         self.feature_extraction_method = None
         self.classifiers = None
         # Config
@@ -109,21 +117,31 @@ class ExperimentController:
 
     def run_experiment(self, dataset_name, feature_extraction_method, classifiers,
                        should_load_embedding_model=True):
-        self.dataset_name = dataset_name
+        self.dataset_enum = dataset_name
+        self.TRAIN_DATA_FOR_FASTTEXT_PATH = self.TOPIC_CLASSIFICATION_DATA_PATH + \
+                                            self.dataset_enum.name + \
+                                            '_fasttext_train_formatted.txt'
+        self.TEST_DATA_FOR_FASTTEXT_PATH = self.TOPIC_CLASSIFICATION_DATA_PATH + \
+                                           self.dataset_enum.name + \
+                                           '_fasttext_test_formatted.txt'
         self.feature_extraction_method = feature_extraction_method
         self.classifiers = classifiers
+        self.should_load_embedding_model = should_load_embedding_model
         # Load dataset
         self.data_df = get_dataset_from_name(dataset_name)
         self.avg_dataset_length = get_dataset_avg_length(self.data_df)
         print('Got dataset:', dataset_name)
         # Split on train and test dataset
-        train_corpus, test_corpus, train_label_names, test_label_names = \
+        self.train_corpus, self.test_corpus, self.train_label_names, \
+        self.test_label_names = \
             train_test_split(np.array(self.data_df['Clean Article']),
                              np.array(self.data_df['Target Name']),
                              test_size=self.TEST_SET_SIZE_RATIO, random_state=42)
         # Tokenize corpus
-        self.tokenized_train = [tn.tokenizer.tokenize(text) for text in train_corpus]
-        self.tokenized_test = [tn.tokenizer.tokenize(text) for text in test_corpus]
+        self.tokenized_train = [tn.tokenizer.tokenize(text) for text in
+                                self.train_corpus]
+        self.tokenized_test = [tn.tokenizer.tokenize(text) for text in
+                               self.test_corpus]
         # Get list of words (I know, cool, not readable one-liner)
         data_word_list = ''.join(list(self.data_df['Clean Article'])).split(' ')
         self.vocabulary = set(data_word_list)
@@ -132,8 +150,9 @@ class ExperimentController:
         print('Train features shape:', self.train_features.shape,
               ' Test features shape:', self.test_features.shape)
         # Pack data in one class
-        self.training_data = TrainingData(self.train_features, train_label_names,
-                                          self.test_features, test_label_names)
+        self.training_data = TrainingData(self.train_features,
+                                          self.train_label_names,
+                                          self.test_features, self.test_label_names)
         self.classifier_list, self.classifier_name_list, \
         self.classifier_name_shortcut_list = \
             self.get_chosen_classifiers_and_their_metadata()
@@ -174,7 +193,7 @@ class ExperimentController:
                 self.embedding_model = util.load_object(
                     self.WORD2VEC_MODEL_SAVE_PATH)
             else:
-                print('Calculating')
+                print('Calculating embeddings')
                 self.embedding_model = get_word2vec_trained_model(
                     self.tokenized_test,
                     self.NUM_OF_VEC_FEATURES)
@@ -185,16 +204,17 @@ class ExperimentController:
         elif self.feature_extraction_method == FeatureExtractionMethod.FASTTEXT:
             if self.should_load_embedding_model:
                 print('Loading embedding model from disk')
-                self.embedding_model = util.load_object(self.FAST_TEXT_SAVE_PATH)
+                # self.embedding_model = util.load_object(self.FAST_TEXT_SAVE_PATH)
+                self.embedding_model = fasttext.load_model(self.FAST_TEXT_SAVE_PATH)
             else:
-                print('Calculating')
-                self.embedding_model = get_fasttext_trained_model(
-                    self.tokenized_train,
-                    self.NUM_OF_VEC_FEATURES)
-                util.save_object(self.embedding_model,
-                                 self.CLASSIFIERS_AND_RESULTS_DIR_PATH +
-                                 'fasttext_model_' + str(
-                                     self.classifier_iter) + '.pkl')
+                print('Calculating embeddings')
+                if not os.path.exists(self.TRAIN_DATA_FOR_FASTTEXT_PATH):
+                    self.reformat_and_save_data_for_fasttext()
+                self.embedding_model = train_fasttext_model(
+                    self.TRAIN_DATA_FOR_FASTTEXT_PATH,
+                    self.NUM_OF_VEC_FEATURES, epoch=100)
+                self.embedding_model.save_model(
+                    self.FAST_TEXT_SAVE_PATH)
             return self.get_document_embeddings_from_fasttext()
         else:
             print('No such feature extraction method:',
@@ -238,3 +258,18 @@ class ExperimentController:
         results_df.columns = self.classifier_name_shortcut_list
         results_df.index = ['CV Mean', 'Test accuracy']
         results_df.to_clipboard()
+
+    def reformat_and_save_data_for_fasttext(self):
+        ft_train_data_formatted = ''
+        for i in range(0, len(self.train_corpus)):
+            if i in self.data_df.index:
+                ft_train_data_formatted += '__label__' + self.train_label_names[i] + \
+                                           ' ' + self.train_corpus[i] + '\n'
+        util.save_object(ft_train_data_formatted, self.TRAIN_DATA_FOR_FASTTEXT_PATH)
+
+        ft_test_data_formatted = ''
+        for i in range(0, len(self.test_corpus)):
+            if i in self.data_df.index:
+                ft_test_data_formatted += '__label__' + self.test_label_names[
+                    i] + ' ' + self.test_corpus[i] + '\n'
+        util.save_object(ft_test_data_formatted, self.TEST_DATA_FOR_FASTTEXT_PATH)
