@@ -26,7 +26,8 @@ FeatureExtractionMethod = Enum('FeatureExtractionMethod',
 ClassificationMethod = Enum('ClassificationMethod', 'Naive_Bayes_Classifier '
                                                     'Logistic_Regression '
                                                     'Support_Vector_Machines '
-                                                    'SVM_with_SGD Random_Forest')
+                                                    'SVM_with_SGD Random_Forest '
+                                                    'Gradient_Boosting_Machines')
 
 
 # def reload_constants():
