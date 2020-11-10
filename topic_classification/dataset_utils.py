@@ -1,13 +1,10 @@
+import json
 import os
 
-from sklearn.datasets import fetch_20newsgroups
 import pandas as pd
+from sklearn.datasets import fetch_20newsgroups
 
 import text_preprocessing.text_normalizer as tn
-import util
-
-from topic_classification.constants import TOPIC_CLASSIFICATION_DATA_PATH, \
-    DATASET_NAME_20newsgroups
 from topic_classification.constants import *
 
 
@@ -121,6 +118,40 @@ def load_preprocessed_bbc_news_summary():
         '_preprocessed.csv').dropna()
 
 
+def fetch_and_preprocess_arxiv_metadata_dataset():
+    dataset = Dataset.arxiv_metadata
+    print('Fetching and preprocessing dataset', dataset.name)
+
+    documents = []
+    for line in open(TOPIC_CLASSIFICATION_DATA_PATH +
+                     dataset.name + '.json', 'r'):
+        documents.append(json.loads(line))
+
+    def strip_category_from_subcategories(category_string: str):
+        return category_string.split(' ')[0].split('.')[0]
+
+    data = {'Article': [document['abstract'] for document in documents],
+            'Target Name': [strip_category_from_subcategories(document['categories'])
+                            for document in documents]}
+
+    data_df = pd.DataFrame(data, columns=['Article', 'Target Name'])
+
+    num_of_categories = len(set(data['Target Name']))
+    print('Num of categories:', num_of_categories)
+
+    data_df = preprocess_data_frame(data_df)
+    data_df.to_csv(
+        TOPIC_CLASSIFICATION_DATA_PATH + dataset.name + '_preprocessed.csv',
+        index=False)
+    return data_df
+
+
+def load_preprocessed_arxiv_metadata_dataset():
+    return pd.read_csv(
+        TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_bbc_news_summary +
+        '_preprocessed.csv').dropna()
+
+
 def preprocess_data_frame(data_df: pd.DataFrame):
     # Preprocessing
     total_nulls = data_df[data_df.Article.str.strip() == ''].shape[0]
@@ -153,6 +184,3 @@ def get_dataset_avg_length(data_df: pd.DataFrame):
     average_text_length = sum(text_lengths) / len(text_lengths)
     print('Average text length:', round(average_text_length))
     return average_text_length
-
-
-
