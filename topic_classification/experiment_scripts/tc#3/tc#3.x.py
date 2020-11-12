@@ -53,15 +53,17 @@ def run_tc3_2():
     dataset = Dataset.arxiv_metadata
     feature_extraction_method = FeatureExtractionMethod.WORD2VEC
     classifiers = [
-        ClassificationMethod.Naive_Bayes_Classifier,
         ClassificationMethod.Logistic_Regression,
         ClassificationMethod.Support_Vector_Machines,
         ClassificationMethod.SVM_with_SGD]
 
     experiment_controller = ExperimentController('tc#3.2', '1')
-    experiment_controller.run_experiment(dataset, feature_extraction_method,
-                                         classifiers,
-                                         should_load_embedding_model=False)
+    experiment_controller.set_variables(dataset, feature_extraction_method,
+                                        classifiers,
+                                        should_load_embedding_model=True)
+    # experiment_controller.run_experiment()
+    experiment_controller.load_results_from_disk()
+    experiment_controller.display_results()
 
 
 run_tc3_2()

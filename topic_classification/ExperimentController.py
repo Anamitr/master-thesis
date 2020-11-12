@@ -116,8 +116,8 @@ class ExperimentController:
         self.elapsed_times = None
         super().__init__()
 
-    def run_experiment(self, dataset_name, feature_extraction_method, classifiers,
-                       should_load_embedding_model=True):
+    def set_variables(self, dataset_name, feature_extraction_method, classifiers,
+                      should_load_embedding_model=True):
         # Set variables
         self.dataset_enum = dataset_name
         self.TRAIN_DATA_FOR_FASTTEXT_PATH = self.TOPIC_CLASSIFICATION_DATA_PATH + \
@@ -129,6 +129,11 @@ class ExperimentController:
         self.feature_extraction_method = feature_extraction_method
         self.classifiers = classifiers
         self.should_load_embedding_model = should_load_embedding_model
+        self.classifier_list, self.classifier_name_list, \
+        self.classifier_name_shortcut_list = \
+            self.get_chosen_classifiers_and_their_metadata()
+
+    def run_experiment(self, dataset_name):
         # Load dataset
         self.data_df = get_dataset_from_name(dataset_name)
         self.avg_dataset_length = get_dataset_avg_length(self.data_df)
@@ -155,9 +160,6 @@ class ExperimentController:
         self.training_data = TrainingData(self.train_features,
                                           self.train_label_names,
                                           self.test_features, self.test_label_names)
-        self.classifier_list, self.classifier_name_list, \
-        self.classifier_name_shortcut_list = \
-            self.get_chosen_classifiers_and_their_metadata()
         # Perform actual training
         self.results = train_multiple_classifiers(self.classifier_list,
                                                   self.classifier_name_list,
@@ -167,19 +169,7 @@ class ExperimentController:
                                                   self.classifier_iter,
                                                   self.RESULTS_PATH)
         # Extract scores for plotting
-        self.cv_mean_scores = [round(result[1], self.SCORE_DECIMAL_PLACES) for result
-                               in self.results]
-        self.test_scores = [round(result[2], self.SCORE_DECIMAL_PLACES) for result in
-                            self.results]
-        self.elapsed_times = [round(result[3], self.TIME_DECIMAL_PLACES) for result
-                              in self.results]
-        create_2_bar_plot(self.classifier_name_shortcut_list, 'Classifier scores',
-                          'Accuracy',
-                          self.cv_mean_scores, self.test_scores, 'cv means', 'test set',
-                          y_range_tuple=(0, 1), should_autolabel=True)
-        create_bar_plot(self.classifier_name_shortcut_list, 'Elapsed training times',
-                        'Time in seconds', self.elapsed_times, color='red')
-        self.print_results_table()
+        self.display_results()
         pass
 
     def get_features(self):
@@ -275,3 +265,32 @@ class ExperimentController:
                 ft_test_data_formatted += '__label__' + self.test_label_names[
                     i] + ' ' + self.test_corpus[i] + '\n'
         util.save_object(ft_test_data_formatted, self.TEST_DATA_FOR_FASTTEXT_PATH)
+
+    def load_results_from_disk(self):
+        results_list = []
+        for i in range(0, len(self.classifier_list)):
+            results = util.load_object(self.CLASSIFIERS_AND_RESULTS_DIR_PATH +
+                                       util.convert_name_to_filename(
+                                           self.classifier_name_list[
+                                               i]) + '_' + self.classifier_iter
+                                       + '_results.pkl')
+            results_list.append(results)
+        self.results = results_list
+        return results_list
+
+    def display_results(self):
+        # Extract scores for plotting
+        self.cv_mean_scores = [round(result[1], self.SCORE_DECIMAL_PLACES) for result
+                               in self.results]
+        self.test_scores = [round(result[2], self.SCORE_DECIMAL_PLACES) for result in
+                            self.results]
+        self.elapsed_times = [round(result[3], self.TIME_DECIMAL_PLACES) for result
+                              in self.results]
+        create_2_bar_plot(self.classifier_name_shortcut_list, 'Classifier scores',
+                          'Accuracy',
+                          self.cv_mean_scores, self.test_scores, 'cv means',
+                          'test set',
+                          y_range_tuple=(0, 1), should_autolabel=True)
+        create_bar_plot(self.classifier_name_shortcut_list, 'Elapsed training times',
+                        'Time in seconds', self.elapsed_times, color='red')
+        self.print_results_table()
