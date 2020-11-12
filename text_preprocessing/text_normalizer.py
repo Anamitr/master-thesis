@@ -112,7 +112,7 @@ def normalize_corpus(corpus, html_stripping=True, contraction_expansion=True,
     # normalize each document in the corpus
     doc_num = 1
     for doc in corpus:
-        print("Doc num:", doc_num)
+        print("Doc num:", doc_num, end='\r')
         doc_num += 1
         # strip HTML
         if html_stripping:
