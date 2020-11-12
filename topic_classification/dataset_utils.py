@@ -147,9 +147,13 @@ def fetch_and_preprocess_arxiv_metadata_dataset():
 
 
 def load_preprocessed_arxiv_metadata_dataset():
-    return pd.read_csv(
-        TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_bbc_news_summary +
-        '_preprocessed.csv').dropna()
+    dataset_dir_path = TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_arxiv_metadata \
+                       + '_preprocessed/'
+    data_list = []
+    for filename in os.listdir(dataset_dir_path):
+        if filename.endswith('.csv'):
+            data_list.append(pd.read_csv(dataset_dir_path + filename))
+    return pd.concat(data_list, axis=0, ignore_index=True)
 
 
 def preprocess_data_frame(data_df: pd.DataFrame):

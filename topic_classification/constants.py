@@ -12,7 +12,7 @@ DATASET_NAME_arxiv_metadata = 'arxiv_metadata'
 CURRENT_DATASET = DATASET_NAME_news_category_dataset
 
 # Logging config
-CLASSIFIER_TRAIN_VERBOSE = True
+CLASSIFIER_TRAIN_VERBOSE = False
 
 # Plotting
 BAR_WIDTH = 0.35

@@ -6,6 +6,10 @@ from topic_classification.constants import Dataset
 from topic_classification.dataset_utils import \
     fetch_and_preprocess_arxiv_metadata_dataset
 
+
+# # I did it on google colab, cause it was faster for some reason (though nominally
+# # my CPU is and there weren't some errors that occurred locally
+
 experiment_controller = ExperimentController()
 
 dataset = Dataset.arxiv_metadata
