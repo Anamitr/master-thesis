@@ -175,7 +175,7 @@ class ExperimentController:
                               in self.results]
         create_2_bar_plot(self.classifier_name_shortcut_list, 'Classifier scores',
                           'Accuracy',
-                          self.cv_mean_scores, test_scores, 'cv means', 'test set',
+                          self.cv_mean_scores, self.test_scores, 'cv means', 'test set',
                           y_range_tuple=(0, 1), should_autolabel=True)
         create_bar_plot(self.classifier_name_shortcut_list, 'Elapsed training times',
                         'Time in seconds', self.elapsed_times, color='red')
