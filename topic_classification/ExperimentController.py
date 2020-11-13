@@ -78,6 +78,8 @@ class ExperimentController:
         self.FAST_TEXT_SAVE_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + \
                                    'fasttext_model_' + \
                                    str(self.classifier_iter) + '.pkl'
+        if not os.path.exists(self.CLASSIFIERS_AND_RESULTS_DIR_PATH):
+            os.makedirs(self.CLASSIFIERS_AND_RESULTS_DIR_PATH)
 
         # Experiment specific
         self.dataset_enum = None
@@ -116,10 +118,10 @@ class ExperimentController:
         self.elapsed_times = None
         super().__init__()
 
-    def set_variables(self, dataset_name, feature_extraction_method, classifiers,
+    def set_variables(self, dataset_enum, feature_extraction_method, classifiers,
                       should_load_embedding_model=True):
         # Set variables
-        self.dataset_enum = dataset_name
+        self.dataset_enum = dataset_enum
         self.TRAIN_DATA_FOR_FASTTEXT_PATH = self.TOPIC_CLASSIFICATION_DATA_PATH + \
                                             self.dataset_enum.name + \
                                             '_fasttext_train_formatted.txt'
@@ -133,11 +135,11 @@ class ExperimentController:
         self.classifier_name_shortcut_list = \
             self.get_chosen_classifiers_and_their_metadata()
 
-    def run_experiment(self, dataset_name):
+    def run_experiment(self):
         # Load dataset
-        self.data_df = get_dataset_from_name(dataset_name)
+        self.data_df = get_dataset_from_name(self.dataset_enum)
         self.avg_dataset_length = get_dataset_avg_length(self.data_df)
-        print('Got dataset:', dataset_name)
+        print('Got dataset:', self.dataset_enum)
         # Split on train and test dataset
         self.train_corpus, self.test_corpus, self.train_label_names, \
         self.test_label_names = \
@@ -196,7 +198,6 @@ class ExperimentController:
         elif self.feature_extraction_method == FeatureExtractionMethod.FASTTEXT:
             if self.should_load_embedding_model:
                 print('Loading embedding model from disk')
-                # self.embedding_model = util.load_object(self.FAST_TEXT_SAVE_PATH)
                 self.embedding_model = fasttext.load_model(self.FAST_TEXT_SAVE_PATH)
             else:
                 print('Calculating embeddings')
@@ -205,8 +206,8 @@ class ExperimentController:
                 self.embedding_model = train_fasttext_model(
                     self.TRAIN_DATA_FOR_FASTTEXT_PATH,
                     self.NUM_OF_VEC_FEATURES, epoch=100)
-                self.embedding_model.save_model(
-                    self.FAST_TEXT_SAVE_PATH)
+
+                self.embedding_model.save_model(self.FAST_TEXT_SAVE_PATH)
             return self.get_document_embeddings_from_fasttext()
         else:
             print('No such feature extraction method:',

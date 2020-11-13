@@ -29,8 +29,8 @@ TrainingData, CLASSIFIERS_AND_RESULTS_DIR_PATH, CLASSIFIER_ITERATION, RESULTS_PA
                          util.convert_name_to_filename(classifier_name_list[i])
                          + '_' + str(CLASSIFIER_ITERATION) + '_results.pkl')
         util.save_object(classifier_list[i],
-                         CLASSIFIERS_AND_RESULTS_DIR_PATH + util.convert_name_to_filename(
-                             classifier_name_list[i])
+                         CLASSIFIERS_AND_RESULTS_DIR_PATH +
+                         util.convert_name_to_filename(classifier_name_list[i])
                          + '_' + str(CLASSIFIER_ITERATION) + '.pkl')
     util.save_object(results_list, RESULTS_PATH)
     return results_list
