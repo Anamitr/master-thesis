@@ -61,11 +61,11 @@ class ExperimentController:
         self.exp_name = exp_name
         self.classifier_iter = classifier_iter
         # Paths
-        self.TOPIC_CLASSIFICATION_DIR_PATH = '/home/konrad/Repositories/' \
-                                             'master-diploma/topic_classification/'
-        self.TOPIC_CLASSIFICATION_DATA_PATH = self.TOPIC_CLASSIFICATION_DIR_PATH + \
+        self.BASE_TOPIC_CLASSIFICATION_DIR_PATH = '/home/konrad/Repositories/' \
+                                                  'master-diploma/topic_classification/'
+        self.TOPIC_CLASSIFICATION_DATA_PATH = self.BASE_TOPIC_CLASSIFICATION_DIR_PATH + \
                                               'topic_class_data/'
-        self.CLASSIFIERS_AND_RESULTS_DIR_PATH = self.TOPIC_CLASSIFICATION_DIR_PATH \
+        self.CLASSIFIERS_AND_RESULTS_DIR_PATH = self.BASE_TOPIC_CLASSIFICATION_DIR_PATH \
                                                 + 'trained_classifiers/' \
                                                 + self.exp_name + '/'
         self.RESULTS_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + 'results_' + \
@@ -78,6 +78,7 @@ class ExperimentController:
         self.FAST_TEXT_SAVE_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + \
                                    'fasttext_model_' + \
                                    str(self.classifier_iter) + '.pkl'
+
         if not os.path.exists(self.CLASSIFIERS_AND_RESULTS_DIR_PATH):
             os.makedirs(self.CLASSIFIERS_AND_RESULTS_DIR_PATH)
 
@@ -295,3 +296,26 @@ class ExperimentController:
         create_bar_plot(self.classifier_name_shortcut_list, 'Elapsed training times',
                         'Time in seconds', self.elapsed_times, color='red')
         self.print_results_table()
+
+    def reload_base_path(self, base_path: str):
+        self.BASE_TOPIC_CLASSIFICATION_DIR_PATH = base_path
+        self.TOPIC_CLASSIFICATION_DATA_PATH = self.BASE_TOPIC_CLASSIFICATION_DIR_PATH + \
+                                              'topic_class_data/'
+        self.CLASSIFIERS_AND_RESULTS_DIR_PATH = self.BASE_TOPIC_CLASSIFICATION_DIR_PATH \
+                                                + 'trained_classifiers/' \
+                                                + self.exp_name + '/'
+        self.RESULTS_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + 'results_' + \
+                            str(self.classifier_iter) + '.pkl'
+        self.WORD2VEC_MODEL_SAVE_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + \
+                                        'w2v_model_' + str(
+            self.classifier_iter) + '.pkl'
+        self.TRAIN_DATA_FOR_FASTTEXT_PATH = self.TOPIC_CLASSIFICATION_DATA_PATH + \
+                                            self.dataset_enum.name + \
+                                            '_fasttext_train_formatted.txt'
+        self.TEST_DATA_FOR_FASTTEXT_PATH = self.TOPIC_CLASSIFICATION_DATA_PATH + \
+                                           self.dataset_enum.name + \
+                                           '_fasttext_test_formatted.txt'
+        self.FAST_TEXT_SAVE_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + \
+                                   'fasttext_model_' + \
+                                   str(self.classifier_iter) + '.pkl'
+        pass
