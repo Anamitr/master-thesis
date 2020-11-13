@@ -51,9 +51,9 @@ def fetch_preprocess_and_save_20newsgroups():
     return data_df
 
 
-def load_20newsgroups():
+def load_20newsgroups(base_data_path):
     data_df = pd.read_csv(
-        TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_20newsgroups
+        base_data_path + DATASET_NAME_20newsgroups
         + '_preprocessed.csv')
     # # For some reason dataset still contains np.nan
     data_df = data_df.dropna()
@@ -77,9 +77,9 @@ def fetch_preprocess_and_save_news_category_dataset():
     return data_df
 
 
-def load_preprocessed_news_category_dataset():
+def load_preprocessed_news_category_dataset(base_data_path):
     return pd.read_csv(
-        TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_news_category_dataset +
+        base_data_path + DATASET_NAME_news_category_dataset +
         '_preprocessed.csv').dropna()
 
 
@@ -112,9 +112,9 @@ def fetch_preprocess_and_save_bbc_news_summary():
     return data_df
 
 
-def load_preprocessed_bbc_news_summary():
+def load_preprocessed_bbc_news_summary(base_data_path):
     return pd.read_csv(
-        TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_bbc_news_summary +
+        base_data_path + DATASET_NAME_bbc_news_summary +
         '_preprocessed.csv').dropna()
 
 
@@ -146,8 +146,8 @@ def fetch_and_preprocess_arxiv_metadata_dataset():
     return data_df
 
 
-def load_preprocessed_arxiv_metadata_dataset():
-    dataset_dir_path = TOPIC_CLASSIFICATION_DATA_PATH + DATASET_NAME_arxiv_metadata \
+def load_preprocessed_arxiv_metadata_dataset(base_data_path):
+    dataset_dir_path = base_data_path + DATASET_NAME_arxiv_metadata \
                        + '_preprocessed/'
     data_list = []
     for filename in os.listdir(dataset_dir_path):

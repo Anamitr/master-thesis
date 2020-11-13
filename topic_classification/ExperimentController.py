@@ -27,17 +27,6 @@ from topic_classification.train_utils import get_chosen_classifiers, \
     train_multiple_classifiers
 
 
-def get_dataset_from_name(dataset_name):
-    dataset_switcher = {
-        Dataset.ds20newsgroups: load_20newsgroups,
-        Dataset.news_category_dataset:
-            load_preprocessed_news_category_dataset,
-        Dataset.bbc_news_summary: load_preprocessed_bbc_news_summary,
-        Dataset.arxiv_metadata: load_preprocessed_arxiv_metadata_dataset,
-    }
-    return dataset_switcher.get(dataset_name, lambda: "Invalid dataset")()
-
-
 def get_classifier_tuple(classifier_enum):
     classifier_switcher = {
         ClassificationMethod.Naive_Bayes_Classifier:
@@ -138,7 +127,7 @@ class ExperimentController:
 
     def run_experiment(self):
         # Load dataset
-        self.data_df = get_dataset_from_name(self.dataset_enum)
+        self.data_df = self.get_dataset_from_name(self.dataset_enum)
         self.avg_dataset_length = get_dataset_avg_length(self.data_df)
         print('Got dataset:', self.dataset_enum)
         # Split on train and test dataset
@@ -174,6 +163,18 @@ class ExperimentController:
         # Extract scores for plotting
         self.display_results()
         pass
+
+    def get_dataset_from_name(self, dataset_name):
+        dataset_switcher = {
+            Dataset.ds20newsgroups: load_20newsgroups,
+            Dataset.news_category_dataset:
+                load_preprocessed_news_category_dataset,
+            Dataset.bbc_news_summary: load_preprocessed_bbc_news_summary,
+            Dataset.arxiv_metadata: load_preprocessed_arxiv_metadata_dataset,
+        }
+        return dataset_switcher.get(dataset_name, lambda: "Invalid dataset")(
+            self.TOPIC_CLASSIFICATION_DATA_PATH
+        )
 
     def get_features(self):
         print('Get features:', self.feature_extraction_method)
