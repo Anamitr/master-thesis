@@ -16,10 +16,10 @@ from topic_classification.dataset_utils import load_preprocessed_bbc_news_summar
 experiment_controller = ExperimentController('tm#2', '1')
 
 TOTAL_TOPICS = 5
-top_terms = 20
+NUM_OF_TOP_TERMS = 20
 
 topics = ['business', 'entertainment', 'politics', 'sport', 'tech']
-topic_by_order = ['sport', 'tech', 'politics', 'business', 'entertainment']
+topics_by_order = ['sport', 'tech', 'politics', 'business', 'entertainment']
 
 lsi_model = None
 lda_model = None
@@ -60,7 +60,7 @@ def display_lsi_results():
     topic_terms.shape
 
     topic_key_term_idxs = np.argsort(-np.absolute(topic_terms), axis=1)[:,
-                          :top_terms]
+                          :NUM_OF_TOP_TERMS]
     topic_keyterm_weights = np.array([topic_terms[row, columns]
                                       for row, columns in list(
             zip(np.arange(TOTAL_TOPICS), topic_key_term_idxs))])
@@ -100,7 +100,7 @@ def run_lda():
 def display_lda_results():
     topic_terms = lda_model.components_
     topic_key_term_idxs = np.argsort(-np.absolute(topic_terms), axis=1)[:,
-                          :top_terms]
+                          :NUM_OF_TOP_TERMS]
     topic_keyterms = vocabulary[topic_key_term_idxs]
     topics = [', '.join(topic) for topic in topic_keyterms]
     # pd.set_option('display.max_colwidth', -1)
@@ -140,7 +140,7 @@ def run_nmf():
 def display_nmf_results():
     topic_terms = nmf_model.components_
     topic_key_term_idxs = np.argsort(-np.absolute(topic_terms), axis=1)[:,
-                          :top_terms]
+                          :NUM_OF_TOP_TERMS]
     topic_keyterms = vocabulary[topic_key_term_idxs]
     topics = [', '.join(topic) for topic in topic_keyterms]
     topics_df = pd.DataFrame(topics,
@@ -213,7 +213,7 @@ predictions = np.array(prediction_results_df['Dominant Topics'])[::2]
 
 correct_predictions = 0
 for i in range(0, len(test_label_names)):
-    if topic_by_order[predictions[i] - 1] == test_label_names[i]:
+    if topics_by_order[predictions[i] - 1] == test_label_names[i]:
         correct_predictions += 1
 
 acc = correct_predictions / len(test_label_names)

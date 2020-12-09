@@ -30,6 +30,7 @@ ClassificationMethod = Enum('ClassificationMethod', 'Naive_Bayes_Classifier '
                                                     'Support_Vector_Machines '
                                                     'SVM_with_SGD Random_Forest '
                                                     'Gradient_Boosting_Machines')
+ModelingMethod = Enum('ModelingMethod', 'LSI LDA NMF')
 
 
 # def reload_constants():
