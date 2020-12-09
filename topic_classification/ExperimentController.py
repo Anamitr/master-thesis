@@ -51,7 +51,7 @@ class ExperimentController:
         self.classifier_iter = classifier_iter
         # Paths
         self.BASE_TOPIC_CLASSIFICATION_DIR_PATH = '/home/konrad/Repositories/' \
-                                                  'master-diploma/topic_classification/'
+                                                  'master-thesis/topic_classification/'
         self.TOPIC_CLASSIFICATION_DATA_PATH = self.BASE_TOPIC_CLASSIFICATION_DIR_PATH + \
                                               'topic_class_data/'
         self.CLASSIFIERS_AND_RESULTS_DIR_PATH = self.BASE_TOPIC_CLASSIFICATION_DIR_PATH \

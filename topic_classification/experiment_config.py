@@ -13,7 +13,7 @@ CLASSIFIER_ITERATION = '1'
 # TEST_SET_SIZE_RATIO = 0.33
 
 # Save paths
-# CLASSIFIERS_AND_RESULTS_DIR_PATH = '/home/konrad/Repositories/master-diploma/' \
+# CLASSIFIERS_AND_RESULTS_DIR_PATH = '/home/konrad/Repositories/master-thesis/' \
 #                                    'topic_classification/trained_classifiers/' \
 #                                    + EXPERIMENT_NAME + '/'
 # RESULTS_PATH = CLASSIFIERS_AND_RESULTS_DIR_PATH + 'results_' + str(

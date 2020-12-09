@@ -1,7 +1,7 @@
 from enum import Enum
 
 # Datasets
-TOPIC_CLASSIFICATION_DATA_PATH = '/home/konrad/Repositories/master-diploma/' \
+TOPIC_CLASSIFICATION_DATA_PATH = '/home/konrad/Repositories/master-thesis/' \
                                  'topic_classification/topic_class_data/'
 DATASET_NAME_20newsgroups = 'ds20newsgroups'
 DATASET_NAME_news_category_dataset = 'news_category_dataset'
@@ -33,7 +33,7 @@ ClassificationMethod = Enum('ClassificationMethod', 'Naive_Bayes_Classifier '
 
 
 # def reload_constants():
-#     topic_classification.experiment_config.CLASSIFIERS_AND_RESULTS_DIR_PATH = '/home/konrad/Repositories/master-diploma/' \
+#     topic_classification.experiment_config.CLASSIFIERS_AND_RESULTS_DIR_PATH = '/home/konrad/Repositories/master-thesis/' \
 #                             'topic_classification/trained_classifiers/' \
 #                                                                    + EXPERIMENT_NAME + '/'
 #     topic_classification.experiment_config.RESULTS_PATH = topic_classification.experiment_config.CLASSIFIERS_AND_RESULTS_DIR_PATH + 'results_' + str(

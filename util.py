@@ -48,7 +48,7 @@ def create_path_if_not_exists(path):
 
 def load_results_of_specific_topic_classification_experiment(experiment_name: str,
                                                              classifier_iteration):
-    results_save_dir_path = '/home/konrad/Repositories/master-diploma/' \
+    results_save_dir_path = '/home/konrad/Repositories/master-thesis/' \
                             'topic_classification/trained_classifiers/' \
                             + experiment_name + '/'
     results_path = results_save_dir_path + 'results_' + str(
