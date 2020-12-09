@@ -13,8 +13,7 @@ from topic_classification.dataset_utils import load_20newsgroups, \
 class TMExperimentController:
     def __init__(self):
         # Constants
-        self.topics_by_order = ['sport', 'tech', 'politics', 'business',
-                                'entertainment']
+        self.topics_in_order = None
         # Paths
         self.BASE_TOPIC_CLASSIFICATION_DIR_PATH = '/home/konrad/Repositories/' \
                                                   'master-thesis/topic_classification/'
@@ -54,6 +53,12 @@ class TMExperimentController:
         self.topics_df = None
         self.dt_df = None
         self.modeling_results_df = None
+        # Classification results
+        self.topic_predictions = None
+        self.prediction_results_df = None
+        self.predictions = None
+        self.correct_predictions = None
+        self.acc = None
 
     def set_variables(self, dateset_enum, modeling_method_enum, num_of_topics):
         self.dataset_enum = dateset_enum
@@ -69,6 +74,7 @@ class TMExperimentController:
         self.lsi_model = TruncatedSVD(n_components=self.TOTAL_TOPICS, n_iter=500,
                                       random_state=42)
         self.lda_model = LatentDirichletAllocation(n_components=self.TOTAL_TOPICS,
+                                                   max_iter=5000,
                                                    max_doc_update_iter=50,
                                                    learning_method='online',
                                                    batch_size=1740,
@@ -161,3 +167,53 @@ class TMExperimentController:
              'Paper Num': document_numbers, 'Topic': topics_df['Terms per Topic'],
              'Paper Name': documents})
         return topics_df, dt_df.T, results_df
+
+    def set_topics_in_order(self, topics_in_order):
+        self.topics_in_order = topics_in_order
+
+    def test_prediction_accuracy(self):
+        if self.topics_in_order is None:
+            print('Set topics_by_order')
+
+        self.topic_predictions = self.modeling_model.transform(self.test_features)
+        self.prediction_results_df = self.create_prediction_results_df()
+        self.predictions = np.array(self.prediction_results_df['Dominant Topics'])[::2]
+
+        self.correct_predictions = 0
+        for i in range(0, len(self.test_label_names)):
+            if self.topics_in_order[self.predictions[i] - 1] == self.test_label_names[i]:
+                self.correct_predictions += 1
+
+        self.acc = self.correct_predictions / len(self.test_label_names)
+        print('Accuracy =', self.acc)
+
+    def create_prediction_results_df(self):
+        global best_topics
+        best_topics = [[(topic, round(sc, 3))
+                        for topic, sc in sorted(enumerate(self.topic_predictions[i]),
+                                                key=lambda row: -row[1])[:2]]
+                       for i in range(len(self.topic_predictions))]
+
+        prediction_results_df = pd.DataFrame()
+        prediction_results_df['Papers'] = range(1, len(self.test_articles) + 1)
+        prediction_results_df['Dominant Topics'] = [
+            [topic_num + 1 for topic_num, sc in item] for
+            item in best_topics]
+        res = prediction_results_df.set_index(['Papers'])['Dominant Topics'].apply(
+            pd.Series).stack().reset_index(level=1, drop=True)
+        prediction_results_df = pd.DataFrame({'Dominant Topics': res.values},
+                                             index=res.index)
+        prediction_results_df['Topic Score'] = [topic_sc for topic_list in
+                                                [[round(sc * 100, 2)
+                                                  for topic_num, sc in item]
+                                                 for item in best_topics]
+                                                for topic_sc in topic_list]
+
+        prediction_results_df['Topic Desc'] = [
+            self.topics_df.iloc[t - 1]['Terms per Topic'] for t in
+            prediction_results_df['Dominant Topics'].values]
+        prediction_results_df['Paper Desc'] = [self.test_articles[i - 1][:200] for
+                                               i in
+                                               prediction_results_df.index.values]
+
+        return prediction_results_df

@@ -19,7 +19,7 @@ TOTAL_TOPICS = 5
 NUM_OF_TOP_TERMS = 20
 
 topics = ['business', 'entertainment', 'politics', 'sport', 'tech']
-topics_by_order = ['sport', 'tech', 'politics', 'business', 'entertainment']
+topics_in_order = ['sport', 'tech', 'politics', 'business', 'entertainment']
 
 lsi_model = None
 lda_model = None
@@ -200,22 +200,23 @@ def create_prediction_results_df():
 # run_lsi()
 # display_lsi_results()
 
-# run_lda()
-# topics_df, dt_df, results_df = display_lda_results()
-# topic_predictions = lda_model.transform(cv_test_features)
+run_lda()
+topics_df, dt_df, results_df = display_lda_results()
+topic_predictions = lda_model.transform(cv_test_features)
 
-run_nmf()
-topics_df, dt_df, results_df = display_nmf_results()
-topic_predictions = nmf_model.transform(cv_test_features)
+# run_nmf()
+# topics_df, dt_df, results_df = display_nmf_results()
+# topic_predictions = nmf_model.transform(cv_test_features)
 
 prediction_results_df = create_prediction_results_df()
 predictions = np.array(prediction_results_df['Dominant Topics'])[::2]
 
 correct_predictions = 0
 for i in range(0, len(test_label_names)):
-    if topics_by_order[predictions[i] - 1] == test_label_names[i]:
+    if topics_in_order[predictions[i] - 1] == test_label_names[i]:
         correct_predictions += 1
 
 acc = correct_predictions / len(test_label_names)
+print('Accuracy =', acc)
 
 # # # Teraz przeprowadź to samo dla NMF
