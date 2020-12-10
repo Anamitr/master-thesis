@@ -122,10 +122,15 @@ def fetch_and_preprocess_arxiv_metadata_dataset():
     dataset = Dataset.arxiv_metadata
     print('Fetching and preprocessing dataset', dataset.name)
 
+    # doc_MAX = 80000
+    # i = 0
     documents = []
     for line in open(TOPIC_CLASSIFICATION_DATA_PATH +
                      dataset.name + '.json', 'r'):
         documents.append(json.loads(line))
+        # i += 1
+        # if i >= doc_MAX:
+        #     break
 
     def strip_category_from_subcategories(category_string: str):
         return category_string.split(' ')[0].split('.')[0]
@@ -153,7 +158,19 @@ def load_preprocessed_arxiv_metadata_dataset(base_data_path):
     for filename in os.listdir(dataset_dir_path):
         if filename.endswith('.csv'):
             data_list.append(pd.read_csv(dataset_dir_path + filename))
-    return pd.concat(data_list, axis=0, ignore_index=True)
+    data_df = pd.concat(data_list, axis=0, ignore_index=True)
+    data_df = squeeze_physics_category(data_df)
+    return data_df
+
+
+def squeeze_physics_category(data_df: pd.DataFrame):
+    physics_subcategories = ['astro-ph', 'cond-mat', 'gr-qc', 'hep-ex', 'hep-lat',
+                             'hep-ph', 'hep-th', 'math-ph', 'nlin', 'nucl-ex',
+                             'nucl-th', 'physics', 'quant-ph']
+    for index, row in data_df.iterrows():
+        if row['Target Name'] in physics_subcategories:
+            row['Target Name'] = 'physics'
+    return data_df
 
 
 def preprocess_data_frame(data_df: pd.DataFrame):

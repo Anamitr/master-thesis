@@ -13,7 +13,7 @@ tm_experiment_controller.run_experiment()
 
 # # You have to manually identify topics from
 # # tm_experiment_controller.modeling_results_df
-topics_in_order = ['sport', 'tech', 'politics', 'business', 'entertainment']
+topics_in_order = ['sport', 'tech', 'politics', 'business', 'entertainment']  # LDA
+topics_in_order = ['tech', 'entertainment', 'politics', 'business', 'sports']  # NMF
 tm_experiment_controller.set_topics_in_order(topics_in_order)
 tm_experiment_controller.test_prediction_accuracy()
-

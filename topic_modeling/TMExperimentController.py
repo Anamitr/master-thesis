@@ -1,3 +1,5 @@
+import os
+
 from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
@@ -12,6 +14,7 @@ from topic_classification.dataset_utils import load_20newsgroups, \
 
 class TMExperimentController:
     def __init__(self):
+        # os.environ['JOBLIB_TEMP_FOLDER'] = '/tmp'
         # Constants
         self.topics_in_order = None
         # Paths
@@ -74,12 +77,13 @@ class TMExperimentController:
         self.lsi_model = TruncatedSVD(n_components=self.TOTAL_TOPICS, n_iter=500,
                                       random_state=42)
         self.lda_model = LatentDirichletAllocation(n_components=self.TOTAL_TOPICS,
-                                                   max_iter=5000,
+                                                   max_iter=11,
                                                    max_doc_update_iter=50,
                                                    learning_method='online',
                                                    batch_size=1740,
                                                    learning_offset=50.,
-                                                   random_state=42, n_jobs=16)
+                                                   random_state=42, n_jobs=16,
+                                                   verbose=1)
         self.nmf_model = NMF(n_components=self.TOTAL_TOPICS, solver='cd',
                              max_iter=50000,
                              random_state=42, alpha=.1, l1_ratio=.85)

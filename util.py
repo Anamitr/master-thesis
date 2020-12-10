@@ -1,6 +1,6 @@
 import errno
 import os
-import pickle
+import dill as pickle
 
 from topic_classification.experiment_config import CLASSIFIER_ITERATION
 

@@ -9,13 +9,16 @@ from sklearn.model_selection import train_test_split
 
 from topic_classification.ExperimentController import ExperimentController
 from topic_classification.constants import Dataset, FeatureExtractionMethod
-from topic_classification.dataset_utils import load_preprocessed_bbc_news_summary
+from topic_classification.dataset_utils import load_preprocessed_bbc_news_summary, \
+    load_preprocessed_arxiv_metadata_dataset
+
+os.environ['JOBLIB_TEMP_FOLDER'] = '/tmp'
 
 # dataset = Dataset.bbc_news_summary
 # feature_extraction_method = FeatureExtractionMethod.FASTTEXT
 experiment_controller = ExperimentController('tm#2', '1')
 
-TOTAL_TOPICS = 5
+TOTAL_TOPICS = 6
 NUM_OF_TOP_TERMS = 20
 
 topics = ['business', 'entertainment', 'politics', 'sport', 'tech']
@@ -27,7 +30,7 @@ nmf_model = None
 document_topics = None
 
 # # # Load preprocessed dataset
-data_df = load_preprocessed_bbc_news_summary(
+data_df = load_preprocessed_arxiv_metadata_dataset(
     experiment_controller.TOPIC_CLASSIFICATION_DATA_PATH)
 
 train_corpus, test_corpus, train_label_names, \
@@ -91,9 +94,10 @@ def run_lda():
     global lda_model, document_topics
     lda_model = LatentDirichletAllocation(n_components=TOTAL_TOPICS, max_iter=500,
                                           max_doc_update_iter=50,
-                                          learning_method='online', batch_size=1740,
+                                          learning_method='batch', batch_size=1740,
                                           learning_offset=50.,
-                                          random_state=42, n_jobs=16)
+                                          random_state=42, n_jobs=16,
+                                          verbose=1)
     document_topics = lda_model.fit_transform(cv_train_features)
 
 
