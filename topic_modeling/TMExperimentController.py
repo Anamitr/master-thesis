@@ -190,6 +190,7 @@ class TMExperimentController:
 
         self.acc = self.correct_predictions / len(self.test_label_names)
         print('Accuracy =', self.acc)
+        return self.acc
 
     def create_prediction_results_df(self):
         global best_topics

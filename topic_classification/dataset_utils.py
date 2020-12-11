@@ -159,7 +159,7 @@ def load_preprocessed_arxiv_metadata_dataset(base_data_path):
         if filename.endswith('.csv'):
             data_list.append(pd.read_csv(dataset_dir_path + filename))
     data_df = pd.concat(data_list, axis=0, ignore_index=True)
-    data_df = squeeze_physics_category(data_df)
+    # data_df = squeeze_physics_category(data_df)
     return data_df
 
 

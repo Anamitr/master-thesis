@@ -6,7 +6,9 @@ TOPIC_CLASSIFICATION_DATA_PATH = '/home/konrad/Repositories/master-thesis/' \
 DATASET_NAME_20newsgroups = 'ds20newsgroups'
 DATASET_NAME_news_category_dataset = 'news_category_dataset'
 DATASET_NAME_bbc_news_summary = 'bbc_news_summary'
-DATASET_NAME_arxiv_metadata = 'arxiv_metadata'
+# There are 2 versions of this dataset, second with unified physics categories
+# and better topic distribution
+DATASET_NAME_arxiv_metadata = 'arxiv_metadata2'
 
 
 CURRENT_DATASET = DATASET_NAME_news_category_dataset
@@ -22,7 +24,7 @@ SCORE_DECIMAL_PLACES = 4
 TIME_DECIMAL_PLACES = 2
 
 Dataset = Enum('Dataset', 'ds20newsgroups news_category_dataset '
-               + 'bbc_news_summary ' + DATASET_NAME_arxiv_metadata)
+               + 'bbc_news_summary ' + 'arxiv_metadata')
 FeatureExtractionMethod = Enum('FeatureExtractionMethod',
                                'BOW TF_IDF WORD2VEC FASTTEXT')
 ClassificationMethod = Enum('ClassificationMethod', 'Naive_Bayes_Classifier '
