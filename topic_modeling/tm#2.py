@@ -1,6 +1,7 @@
 import sys
 
-from topic_classification.constants import Dataset, ModelingMethod
+from topic_classification.constants import Dataset, ModelingMethod, \
+    FeatureExtractionMethod
 from topic_modeling.TMExperimentController import TMExperimentController
 
 dataset = Dataset.bbc_news_summary
@@ -8,7 +9,8 @@ NUM_OF_TOPICS = 5
 modeling_method = ModelingMethod.NMF
 
 tm_experiment_controller = TMExperimentController()
-tm_experiment_controller.set_variables(dataset, modeling_method, NUM_OF_TOPICS)
+tm_experiment_controller.set_variables(dataset,
+                                       modeling_method, NUM_OF_TOPICS)
 tm_experiment_controller.run_experiment()
 
 # # You have to manually identify topics from

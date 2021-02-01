@@ -1,6 +1,7 @@
 import errno
 import os
 import dill as pickle
+import pandas as pd
 
 from topic_classification.experiment_config import CLASSIFIER_ITERATION
 
@@ -63,3 +64,13 @@ def convert_name_to_filename(name: str):
 
 def transpose_list(list_to_transpose: list):
     return list(map(list, zip(*list_to_transpose)))
+
+
+# Dataframes
+def cal_num_of_docs_per_cat(data_df: pd.DataFrame):
+    result = {}
+    for cat in set(data_df['Target Name']):
+        result[cat] = 0
+    for index, row in data_df.iterrows():
+        result[row['Target Name']] += 1
+    return result

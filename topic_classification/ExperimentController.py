@@ -126,10 +126,12 @@ class ExperimentController:
             self.get_chosen_classifiers_and_their_metadata()
 
     def run_experiment(self):
+        print('Running', self.exp_name, ', it.', self.classifier_iter)
         # Load dataset
         self.data_df = self.get_dataset_from_name(self.dataset_enum)
         self.avg_dataset_length = get_dataset_avg_length(self.data_df)
-        print('Got dataset:', self.dataset_enum)
+        print('Got dataset:', self.dataset_enum, 'num of cat.',
+              self.get_num_of_categories())
         # Split on train and test dataset
         self.train_corpus, self.test_corpus, self.train_label_names, \
         self.test_label_names = \
@@ -191,8 +193,7 @@ class ExperimentController:
             else:
                 print('Calculating embeddings')
                 self.embedding_model = get_word2vec_trained_model(
-                    self.tokenized_test,
-                    self.NUM_OF_VEC_FEATURES)
+                    self.tokenized_test, self.NUM_OF_VEC_FEATURES)
                 util.save_object(self.embedding_model,
                                  self.CLASSIFIERS_AND_RESULTS_DIR_PATH + 'w2v_model_'
                                  + str(self.classifier_iter) + '.pkl')
@@ -208,7 +209,6 @@ class ExperimentController:
                 self.embedding_model = train_fasttext_model(
                     self.TRAIN_DATA_FOR_FASTTEXT_PATH,
                     self.NUM_OF_VEC_FEATURES, epoch=100)
-
                 self.embedding_model.save_model(self.FAST_TEXT_SAVE_PATH)
             return self.get_document_embeddings_from_fasttext()
         else:
@@ -319,4 +319,13 @@ class ExperimentController:
         self.FAST_TEXT_SAVE_PATH = self.CLASSIFIERS_AND_RESULTS_DIR_PATH + \
                                    'fasttext_model_' + \
                                    str(self.classifier_iter) + '.pkl'
-        pass
+
+    def get_cv_mean_scores(self):
+        return [round(result[1], 4) for result in self.results]
+
+    def get_test_scores(self):
+        return [round(result[2], 4) for result in self.results]
+
+    def get_num_of_categories(self):
+        return len(set(self.data_df['Target Name']))
+

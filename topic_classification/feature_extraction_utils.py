@@ -66,7 +66,8 @@ def get_tf_idf_features(train_corpus, test_corpus):
     tv_test_features = tv.transform(test_corpus)
     print('TFIDF model:> Train features shape:', tv_train_features.shape,
           ' Test features shape:', tv_test_features.shape)
-    return tv_train_features, tv_test_features
+
+    return tv_train_features, tv_test_features, tv.get_feature_names()
 
 
 def get_word2vec_trained_model(tokenized_train: list, num_of_features: int):

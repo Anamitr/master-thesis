@@ -20,16 +20,13 @@ def run_tc3_0():
     dataset = Dataset.arxiv_metadata
     feature_extraction_method = FeatureExtractionMethod.BOW
     classifiers = [
-        ClassificationMethod.Naive_Bayes_Classifier,
-        ClassificationMethod.Logistic_Regression,
-        ClassificationMethod.Support_Vector_Machines,
-        ClassificationMethod.SVM_with_SGD,
         ClassificationMethod.Gradient_Boosting_Machines]
 
-    experiment_controller = ExperimentController('tc#3.0', '1')
-    experiment_controller.run_experiment(dataset, feature_extraction_method,
-                                         classifiers,
-                                         should_load_embedding_model=False)
+    experiment_controller = ExperimentController('tc#3.0', '3')
+    experiment_controller.set_variables(dataset, feature_extraction_method,
+                                        classifiers,
+                                        should_load_embedding_model=False)
+    experiment_controller.run_experiment()
 
 
 def run_tc3_1():
@@ -40,12 +37,14 @@ def run_tc3_1():
         ClassificationMethod.Naive_Bayes_Classifier,
         ClassificationMethod.Logistic_Regression,
         ClassificationMethod.Support_Vector_Machines,
-        ClassificationMethod.SVM_with_SGD]
+        ClassificationMethod.SVM_with_SGD,
+        ClassificationMethod.Gradient_Boosting_Machines]
 
-    experiment_controller = ExperimentController('tc#3.1', '1')
-    experiment_controller.run_experiment(dataset, feature_extraction_method,
-                                         classifiers,
-                                         should_load_embedding_model=False)
+    experiment_controller = ExperimentController('tc#3.1', '2')
+    experiment_controller.set_variables(dataset, feature_extraction_method,
+                                        classifiers,
+                                        should_load_embedding_model=False)
+    experiment_controller.run_experiment()
 
 
 def run_tc3_2():
@@ -57,13 +56,13 @@ def run_tc3_2():
         ClassificationMethod.Support_Vector_Machines,
         ClassificationMethod.SVM_with_SGD]
 
-    experiment_controller = ExperimentController('tc#3.2', '1')
+    experiment_controller = ExperimentController('tc#3.2', '2')
     experiment_controller.set_variables(dataset, feature_extraction_method,
                                         classifiers,
-                                        should_load_embedding_model=True)
-    # experiment_controller.run_experiment()
-    experiment_controller.load_results_from_disk()
-    experiment_controller.display_results()
+                                        should_load_embedding_model=False)
+    experiment_controller.run_experiment()
+    # experiment_controller.load_results_from_disk()
+    # experiment_controller.display_results()
 
 
 def run_tc3_4():
@@ -75,16 +74,16 @@ def run_tc3_4():
         ClassificationMethod.Support_Vector_Machines,
         ClassificationMethod.SVM_with_SGD]
 
-    experiment_controller = ExperimentController('tc#3.4', '1')
+    experiment_controller = ExperimentController('tc#3.4', '2')
     experiment_controller.set_variables(dataset, feature_extraction_method,
                                         classifiers,
-                                        should_load_embedding_model=True)
+                                        should_load_embedding_model=False)
     experiment_controller.run_experiment()
     # experiment_controller.load_results_from_disk()
     # experiment_controller.display_results()
 
 
-run_tc3_4()
+run_tc3_0()
 # print('Hi')
 
 # from topic_classification.display_utils import create_2_bar_plot, \

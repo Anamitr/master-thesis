@@ -78,7 +78,8 @@ def create_2_bar_plot(classifier_name_shortcut_list, plot_title, y_label_name,
     ax.set_title(plot_title)
     ax.set_xticks(x)
     ax.set_xticklabels(classifier_name_shortcut_list)
-    ax.legend()
+    # ax.legend()
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='lower right')
 
     bar_labels_y_list = []
 

@@ -3,11 +3,12 @@ from enum import Enum
 # Datasets
 TOPIC_CLASSIFICATION_DATA_PATH = '/home/konrad/Repositories/master-thesis/' \
                                  'topic_classification/topic_class_data/'
-DATASET_NAME_20newsgroups = 'ds20newsgroups'
+DATASET_NAME_20newsgroups = '20newsgroups'
 DATASET_NAME_news_category_dataset = 'news_category_dataset'
 DATASET_NAME_bbc_news_summary = 'bbc_news_summary'
 # There are 2 versions of this dataset, second with unified physics categories
 # and better topic distribution
+# DATASET_NAME_arxiv_metadata = 'arxiv_metadata'
 DATASET_NAME_arxiv_metadata = 'arxiv_metadata2'
 
 

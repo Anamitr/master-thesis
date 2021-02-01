@@ -6,10 +6,14 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 
-from topic_classification.constants import Dataset, ModelingMethod
+from topic_classification.constants import Dataset, ModelingMethod, \
+    FeatureExtractionMethod
 from topic_classification.dataset_utils import load_20newsgroups, \
     load_preprocessed_news_category_dataset, load_preprocessed_bbc_news_summary, \
     load_preprocessed_arxiv_metadata_dataset
+from topic_classification.feature_extraction_utils import get_tf_idf_features, \
+    get_simple_bag_of_words_features
+import text_preprocessing.text_normalizer as tn
 
 
 class TMExperimentController:
@@ -49,6 +53,7 @@ class TMExperimentController:
         self.train_articles = None
         self.test_articles = None
         # Feature Extraction
+        self.feature_extraction_method = None
         self.cv = None
         self.train_features = None
         self.test_features = None
@@ -63,7 +68,8 @@ class TMExperimentController:
         self.correct_predictions = None
         self.acc = None
 
-    def set_variables(self, dateset_enum, modeling_method_enum, num_of_topics):
+    def set_variables(self, dateset_enum,
+                      modeling_method_enum, num_of_topics):
         self.dataset_enum = dateset_enum
         self.TRAIN_DATA_FOR_FASTTEXT_PATH = self.TOPIC_CLASSIFICATION_DATA_PATH + \
                                             self.dataset_enum.name + \
@@ -77,7 +83,7 @@ class TMExperimentController:
         self.lsi_model = TruncatedSVD(n_components=self.TOTAL_TOPICS, n_iter=500,
                                       random_state=42)
         self.lda_model = LatentDirichletAllocation(n_components=self.TOTAL_TOPICS,
-                                                   max_iter=11,
+                                                   max_iter=100,
                                                    max_doc_update_iter=50,
                                                    learning_method='online',
                                                    batch_size=1740,
@@ -85,30 +91,41 @@ class TMExperimentController:
                                                    random_state=42, n_jobs=16,
                                                    verbose=1)
         self.nmf_model = NMF(n_components=self.TOTAL_TOPICS, solver='cd',
-                             max_iter=50000,
-                             random_state=42, alpha=.1, l1_ratio=.85)
+                             max_iter=5000000,
+                             random_state=42, alpha=.1, l1_ratio=.5)
 
-    def run_experiment(self):
+    def run_experiment(self, should_do_additional_dataset_preprocessing=False):
         # Load dataset
-        self.data_df = self.get_dataset_from_name(self.dataset_enum)
-        print('Got dataset:', self.dataset_enum)
+        self.load_dataset()
+        if should_do_additional_dataset_preprocessing:
+            self.do_additional_dataset_preprocessing()
 
         self.train_corpus, self.test_corpus, self.train_label_names, \
         self.test_label_names = train_test_split(
             np.array(self.data_df['Clean Article']),
             np.array(self.data_df['Target Name']),
             test_size=0.33, random_state=42)
+        # # Tokenize corpus
+        # self.tokenized_train = [tn.tokenizer.tokenize(text) for text in
+        #                         self.train_corpus]
+        # self.tokenized_test = [tn.tokenizer.tokenize(text) for text in
+        #                        self.test_corpus]
+        # # Get list of words (I know, cool, not readable one-liner)
+        # data_word_list = ''.join(list(self.data_df['Clean Article'])).split(' ')
+        # self.vocabulary = set(data_word_list)
 
         self.train_articles = [art_str.split(' ') for art_str in self.train_corpus]
         self.test_articles = [art_str.split(' ') for art_str in self.test_corpus]
 
         # # # Feature Extraction
-        self.cv = CountVectorizer(min_df=20, max_df=0.6, ngram_range=(1, 2),
+        self.cv = CountVectorizer(min_df=20, max_df=0.01, ngram_range=(1, 2),
                                   token_pattern=None, tokenizer=lambda doc: doc,
                                   preprocessor=lambda doc: doc)
         self.train_features = self.cv.fit_transform(self.train_articles)
         self.test_features = self.cv.transform(self.test_articles)
+        # self.train_features, self.test_features = self.get_features()
         self.vocabulary = np.array(self.cv.get_feature_names())
+        print("Vocabulary length:", len(self.vocabulary))
         print('Extracted features')
         # # #
         self.run_modeling()
@@ -116,6 +133,10 @@ class TMExperimentController:
         self.topics_df, self.dt_df, self.modeling_results_df = \
             self.generate_modeling_results()
         print('Modeling results ready')
+
+    def load_dataset(self):
+        self.data_df = self.get_dataset_from_name(self.dataset_enum)
+        print('Got dataset:', self.dataset_enum)
 
     def get_dataset_from_name(self, dataset_name):
         dataset_switcher = {
@@ -175,22 +196,48 @@ class TMExperimentController:
     def set_topics_in_order(self, topics_in_order):
         self.topics_in_order = topics_in_order
 
+    def cal_predictions(self):
+        self.topic_predictions = self.modeling_model.transform(self.test_features)
+        self.prediction_results_df = self.create_prediction_results_df()
+        self.predictions = np.array(self.prediction_results_df['Dominant Topics'])[
+                           ::2]
+
     def test_prediction_accuracy(self):
         if self.topics_in_order is None:
             print('Set topics_by_order')
 
-        self.topic_predictions = self.modeling_model.transform(self.test_features)
-        self.prediction_results_df = self.create_prediction_results_df()
-        self.predictions = np.array(self.prediction_results_df['Dominant Topics'])[::2]
+        self.cal_predictions()
 
         self.correct_predictions = 0
         for i in range(0, len(self.test_label_names)):
-            if self.topics_in_order[self.predictions[i] - 1] == self.test_label_names[i]:
+            if self.topics_in_order[self.predictions[i] - 1] == \
+                    self.test_label_names[i]:
                 self.correct_predictions += 1
 
         self.acc = self.correct_predictions / len(self.test_label_names)
         print('Accuracy =', self.acc)
         return self.acc
+
+    def cal_scores_per_topic(self):
+        self.cal_predictions()
+
+        topic_scores = {}
+        topic_occurrences = {}
+        for topic in self.topics_in_order:
+            topic_scores[topic] = 0
+            topic_occurrences[topic] = 0
+
+        for i in range(0, len(self.test_label_names)):
+            topic_occurrences[self.test_label_names[i]] += 1
+            if self.topics_in_order[self.predictions[i] - 1] == \
+                    self.test_label_names[i]:
+                topic_scores[self.test_label_names[i]] += 1
+
+        print('Scores per topic:')
+        for key in topic_scores.keys():
+            print(key, ':', float(topic_scores[key]) / float(topic_occurrences[
+                                                                 key]))
+        return topic_scores, topic_occurrences
 
     def create_prediction_results_df(self):
         global best_topics
@@ -222,3 +269,40 @@ class TMExperimentController:
                                                prediction_results_df.index.values]
 
         return prediction_results_df
+
+    def get_features(self):
+        print('Get features:', self.feature_extraction_method)
+        if self.feature_extraction_method == FeatureExtractionMethod.BOW:
+            return get_simple_bag_of_words_features(self.train_corpus,
+                                                    self.test_corpus)
+        elif self.feature_extraction_method == FeatureExtractionMethod.TF_IDF:
+            tv_train_features, tv_test_features, self.vocabulary = \
+                get_tf_idf_features(self.train_corpus, self.test_corpus)
+            return tv_train_features, tv_test_features
+
+    def do_additional_dataset_preprocessing(self):
+        print("Performing additional dataset preprocessing")
+        # self.data_df['Target Name'].replace({"math": "math-stat",
+        #                                      "stat": "math-stat"}, inplace=True)
+        self.data_df['Target Name'].replace({"econ": "econ-q-fin",
+                                             "q-fin": "econ-q-fin"}, inplace=True)
+        # self.data_df['Target Name'].replace({"eess": "eess-physics",
+        #                                      "physics": "eess-physics"},
+        #                                     inplace=True)
+        # self.data_df = self.data_df[self.data_df['Target Name'] == 'math' or
+        #                             self.data_df['Target Name'] == 'stat']
+        # self.data_df.drop(self.data_df.loc[self.data_df['Target Name'] ==
+        #                                    'cs'].index, inplace=True)
+        # self.data_df.drop(self.data_df.loc[self.data_df['Target Name'] ==
+        #                                    'q-bio'].index, inplace=True)
+        # self.data_df.drop(self.data_df.loc[self.data_df['Target Name'] ==
+        #                                    'econ'].index, inplace=True)
+        # self.data_df.drop(self.data_df.loc[self.data_df['Target Name'] ==
+        #                                    'q-fin'].index, inplace=True)
+        # self.data_df.drop(self.data_df.loc[self.data_df['Target Name'] ==
+        #                                    'eess'].index, inplace=True)
+        # self.data_df.drop(self.data_df.loc[self.data_df['Target Name'] ==
+        #                                    'physics'].index, inplace=True)
+
+    def get_dataset_categories(self):
+        return set(self.data_df['Target Name'])
