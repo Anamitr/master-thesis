@@ -46,7 +46,7 @@ Part of data preprocessing was done on Google Colab, due to computational time.
 
 For topic modeling two following datasets were used.
 
-![img_1.png](img_1.png)
+![img_1.png](sup_vs_unsup_results.png)
 
 BBC News Summary is news dataset with 5 categories, while ArXiv Dataset
 contains scholar articles in 8 fields. Supervised methods proved definitely better,
