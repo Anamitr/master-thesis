@@ -12,14 +12,21 @@ is automation of manual data labeling.
 
 The examination included 4 datasets, 4 feature extraction methods, 5 classifiers and
 3 topic modeling algorithms:
-* Datasets: 20 Newsgroups, News Category Dataset, BBC News Summary, ArXiv Metadata
+
+* Datasets: [20 Newsgroups](https://scikit-learn.org/0.19/datasets/twenty_newsgroups.html),
+  [News Category Dataset](https://www.kaggle.com/rmisra/news-category-dataset),
+[BBC News Summary](https://www.kaggle.com/pariza/bbc-news-summary), 
+[ArXiv Metadata](https://www.kaggle.com/Cornell-University/arxiv), ([Arxiv 
+  preprocessed](https://drive.google.com/drive/folders/12cSY1GQCFA5cuL66yuIpN7giei_H__it?usp=sharing))
 * Feature extraction: BOW, TF-IDF, Word2Vec, FastText
 * Classifiers: Naive Bayes, Logistic Regression, SVM, SVM with SGD, Random Forest and
   Gradient Boosting Machines
 * Modeling algorithms: LSI, LDA, NMF
 
 During this work an experiment controller was created enabling fast test conducting.
-Its input were configuration fields defining methods to be used.
+Its input were configuration fields defining methods to be used. Data must be prior 
+preprocessed. For preprocessing refer to dataset_utils, fetch_preprocess_and_save_* 
+methods.
 
 #### Example experiment definition:
 
@@ -48,11 +55,11 @@ For topic modeling two following datasets were used.
 
 ![img_1.png](sup_vs_unsup_results.png)
 
-BBC News Summary is news dataset with 5 categories, while ArXiv Dataset
-contains scholar articles in 8 fields. Supervised methods proved definitely better,
-but ~6% accuracy loss may be tempting price for skipping manual labeling in case of
-the first dataset. In ArXiv, unsupervised methods achieved much worse score, still
-they could be possibly used as a suggestion system for manual labelling.
+BBC News Summary is news dataset with 5 categories, while ArXiv Dataset contains
+scholar articles in 8 fields. Supervised methods proved definitely better, but ~6%
+accuracy loss may be tempting price for skipping manual labeling in case of the first
+dataset. In ArXiv, unsupervised methods achieved much worse score, still they could
+be possibly used as a suggestion system for manual labelling.
 
 Quite important matter is that scholar articles dataset requires much more
 specialized knowledge than news. Despite that and the fact that ArXiv had more
@@ -60,8 +67,8 @@ categories, the difference between their best scores isn't as tremendous. This
 suggests that classification algorithms do not simply automate manual work, but also
 are more insensitive to topic expertise.
 
-Also, an experiment with Arxiv dataset containing 18 categories. Physics was 
-expanded into 13 distinct subcategories. Best test score achieved was 0.8155. 
-Again, there was a big scholar knowledge requirement raise, exceeding the 
-author's of this work capabilities. The ~4% score loss seems disproportional, 
-confirming presented algorithms' insensitivity to topic expertise.
+Also, an experiment with Arxiv dataset containing 18 categories. Physics was expanded
+into 13 distinct subcategories. Best test score achieved was 0.8155. Again, there was
+a big scholar knowledge requirement raise, exceeding the author's of this work
+capabilities. The ~4% score loss seems disproportional, confirming presented
+algorithms' insensitivity to topic expertise.
